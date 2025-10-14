@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { Product } from '../types'
+import { getApiBase } from '../utils/apiBase'
 
 export function useProducts() {
   const [items, setItems] = useState<Product[]>([])
@@ -10,7 +11,7 @@ export function useProducts() {
     let cancelled = false
     ;(async () => {
       try {
-        const apiBase = (import.meta as any).env.VITE_API_URL || 'http://localhost:4000'
+        const apiBase = getApiBase()
         const res = await fetch(`${apiBase}/api/products`, { credentials: 'include' })
         if (!res.ok) throw new Error('Failed to load products')
         const rows = await res.json()

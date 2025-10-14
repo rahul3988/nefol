@@ -12,13 +12,13 @@ const app = express()
 app.use(express.json())
 
 const clientOrigin = process.env.CLIENT_ORIGIN || 'http://localhost:5173'
-app.use(cors({ origin: [clientOrigin, 'http://localhost:5174'], credentials: true }))
+app.use(cors({ origin: (_origin, cb) => cb(null, true), credentials: true }))
 
 // Create HTTP server and Socket.IO
 const server = createServer(app)
 const io = new SocketIOServer(server, {
   cors: {
-    origin: [clientOrigin, 'http://localhost:5174'],
+    origin: (_origin, cb) => cb(null, true),
     methods: ['GET', 'POST']
   }
 })
@@ -62,6 +62,7 @@ async function ensureSchema() {
       price text default '',
       list_image text default '',
       description text default '',
+      details jsonb default '{}'::jsonb,
       created_at timestamptz default now(),
       updated_at timestamptz default now()
     );
@@ -557,6 +558,50 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
   res.json({ url, filename: file.filename })
 })
 
+// Serve product details CSV as JSON for PDP and pricing
+app.get('/api/products-csv', async (_req, res) => {
+  try {
+    const csvPath = path.resolve(process.cwd(), '..', 'product details.csv')
+    if (!fs.existsSync(csvPath)) {
+      return res.json([])
+    }
+    const raw = fs.readFileSync(csvPath, 'utf8')
+    const lines = raw.split(/\r?\n/).filter(l => l.trim().length > 0)
+    if (lines.length === 0) return res.json([])
+    const headerLine = lines[0]
+    const headers = headerLine.split(',').map(h => h.trim())
+    const rows = [] as any[]
+    for (let i = 1; i < lines.length; i++) {
+      // basic CSV split (no quoted fields support). Expand later if needed.
+      const parts = lines[i].split(',')
+      if (parts.every(p => p.trim() === '')) continue
+      const obj: any = {}
+      for (let j = 0; j < headers.length; j++) {
+        obj[headers[j]] = (parts[j] ?? '').trim()
+      }
+      rows.push(obj)
+    }
+    res.json(rows)
+  } catch (err) {
+    console.error('Failed to read products CSV:', err)
+    res.status(500).json({ error: 'Failed to read products CSV' })
+  }
+})
+
+// Upload CSV to replace current product details CSV
+app.post('/api/products-csv/upload', upload.single('file'), async (req, res) => {
+  try {
+    const file = (req as any).file as Express.Multer.File | undefined
+    if (!file) return res.status(400).json({ error: 'No file uploaded' })
+    const destPath = path.resolve(process.cwd(), '..', 'product details.csv')
+    fs.copyFileSync(file.path, destPath)
+    res.json({ ok: true })
+  } catch (err) {
+    console.error('Failed to upload CSV:', err)
+    res.status(500).json({ error: 'Failed to upload CSV' })
+  }
+})
+
 
 // Products CRUD
 app.get('/api/products', async (_req, res) => {
@@ -600,11 +645,11 @@ app.get('/api/products/slug/:slug', async (req, res) => {
 
 app.post('/api/products', async (req, res) => {
   try {
-    const { slug, title, category = '', price = '', listImage = '', description = '' } = req.body || {}
+    const { slug, title, category = '', price = '', listImage = '', description = '', details = {} } = req.body || {}
     if (!slug || !title) return res.status(400).json({ error: 'slug and title are required' })
     const { rows } = await pool.query(
-      'insert into products (slug, title, category, price, list_image, description) values ($1,$2,$3,$4,$5,$6) returning *',
-      [slug, title, category, price, listImage, description]
+      'insert into products (slug, title, category, price, list_image, description, details) values ($1,$2,$3,$4,$5,$6,$7) returning *',
+      [slug, title, category, price, listImage, description, JSON.stringify(details)]
     )
     res.status(201).json(rows[0])
   } catch (err: any) {
@@ -615,7 +660,7 @@ app.post('/api/products', async (req, res) => {
 
 app.put('/api/products/:id', async (req, res) => {
   try {
-    const { slug, title, category, price, listImage, description } = req.body || {}
+    const { slug, title, category, price, listImage, description, details } = req.body || {}
     const { rows } = await pool.query(
       `update products set
          slug = coalesce($1, slug),
@@ -623,9 +668,10 @@ app.put('/api/products/:id', async (req, res) => {
          category = coalesce($3, category),
          price = coalesce($4, price),
          list_image = coalesce($5, list_image),
-         description = coalesce($6, description)
-       where id = $7 returning *`,
-      [slug ?? null, title ?? null, category ?? null, price ?? null, listImage ?? null, description ?? null, req.params.id]
+         description = coalesce($6, description),
+         details = coalesce($7, details)
+       where id = $8 returning *`,
+      [slug ?? null, title ?? null, category ?? null, price ?? null, listImage ?? null, description ?? null, details ? JSON.stringify(details) : null, req.params.id]
     )
     if (!rows[0]) return res.status(404).json({ error: 'Not found' })
     res.json(rows[0])

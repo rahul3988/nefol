@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
+import { getApiBase } from '../utils/apiBase'
 
 interface User {
   id: number
@@ -78,7 +79,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setError(null)
       setIsLoading(true)
 
-      const response = await fetch('http://localhost:4000/api/auth/login', {
+      const apiBase = getApiBase()
+      const response = await fetch(`${apiBase}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -112,7 +114,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setError(null)
       setIsLoading(true)
 
-      const response = await fetch('http://localhost:4000/api/auth/signup', {
+      const apiBase = getApiBase()
+      const response = await fetch(`${apiBase}/api/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData)
@@ -153,7 +156,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       if (!user) return false
 
-      const response = await fetch(`http://localhost:4000/api/users/${user.id}`, {
+      const apiBase = getApiBase()
+      const response = await fetch(`${apiBase}/api/users/${user.id}`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',

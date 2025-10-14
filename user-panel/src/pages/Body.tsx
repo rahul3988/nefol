@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { getApiBase } from '../utils/apiBase'
 import { Heart, Star, ShoppingCart } from 'lucide-react'
 
 interface Product {
@@ -21,7 +22,8 @@ export default function Body() {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:4000/api/products')
+      const apiBase = getApiBase()
+      const response = await fetch(`${apiBase}/api/products`)
       if (response.ok) {
         const data = await response.json()
         // Filter products for body category

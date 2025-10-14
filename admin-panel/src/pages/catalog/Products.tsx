@@ -11,6 +11,7 @@ type Product = {
   price: string
   list_image: string
   description: string
+  details?: any
 }
 
 export default function Products() {
@@ -41,7 +42,14 @@ function ProductsManager() {
   const [selected, setSelected] = useState<Product | null>(null)
   const [pdpImages, setPdpImages] = useState<string[]>([])
   const [form, setForm] = useState<Partial<Product>>({
-    slug: '', title: '', category: '', price: '', list_image: '', description: ''
+    slug: '', title: '', category: '', price: '', list_image: '', description: '', details: {
+      sku: '', hsn: '', mrp: '', websitePrice: '', brand: '', subtitle: '',
+      skinHairType: '', netQuantity: '', unitCount: '', packageContent: '',
+      innerPackaging: '', outerPackaging: '', netWeight: '', deadWeight: '',
+      gstPercent: '', countryOfOrigin: '', manufacturer: '', keyIngredients: '',
+      ingredientBenefits: '', howToUse: '', longDescription: '', bulletHighlights: '',
+      imageLinks: '', videoLinks: '', platformCategoryMapping: '', hazardous: '', badges: ''
+    }
   })
   const [formMainImage, setFormMainImage] = useState<File | null>(null)
   const [formPdpImages, setFormPdpImages] = useState<File[]>([])
@@ -92,7 +100,8 @@ function ProductsManager() {
           category: form.category,
           price: form.price,
           listImage: listImageUrl,
-          description: form.description
+          description: form.description,
+          details: form.details
         })
       })
       if (!res.ok) throw new Error('create failed')
@@ -114,7 +123,7 @@ function ProductsManager() {
         }
       }
       await load()
-      setForm({ slug: '', title: '', category: '', price: '', list_image: '', description: '' })
+      setForm({ slug: '', title: '', category: '', price: '', list_image: '', description: '', details: { ...form.details, sku: '', hsn: '', mrp: '', websitePrice: '' } })
       setFormMainImage(null)
       setFormPdpImages([])
     } catch (e) {
@@ -284,8 +293,23 @@ function ProductsManager() {
         <form onSubmit={submit} className="grid grid-cols-1 gap-3 md:grid-cols-3">
           <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="Slug" value={form.slug||''} onChange={e=>setForm(prev=>({...prev, slug:e.target.value}))} required />
           <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="Title" value={form.title||''} onChange={e=>setForm(prev=>({...prev, title:e.target.value}))} required />
-          <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="Category" value={form.category||''} onChange={e=>setForm(prev=>({...prev, category:e.target.value}))} />
-          <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="Price" value={form.price||''} onChange={e=>setForm(prev=>({...prev, price:e.target.value}))} />
+          <select 
+            className="rounded bg-white/10 px-3 py-2 outline-none" 
+            value={form.category||''} 
+            onChange={e=>setForm(prev=>({...prev, category:e.target.value}))}
+            required
+          >
+            <option value="">Select Category</option>
+            <option value="Face Care">Face Care</option>
+            <option value="Hair Care">Hair Care</option>
+            <option value="Body Care">Body Care</option>
+            <option value="Skincare">Skincare</option>
+          </select>
+              <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="Price (display)" value={form.price||''} onChange={e=>setForm(prev=>({...prev, price:e.target.value}))} />
+              <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="SKU" value={form.details?.sku||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), sku:e.target.value }}))} />
+              <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="HSN Code" value={form.details?.hsn||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), hsn:e.target.value }}))} />
+              <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="MRP" value={form.details?.mrp||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), mrp:e.target.value }}))} />
+              <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="Website Price (Discounted)" value={form.details?.websitePrice||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), websitePrice:e.target.value }}))} />
           <div className="md:col-span-2">
             <div className="mb-1 text-xs text-white/70">Main Image (upload or fallback URL)</div>
             <div className="flex items-center gap-2">
@@ -296,6 +320,10 @@ function ProductsManager() {
             <div className="mt-2 text-xs text-white/50">Add additional video in PDP Media below.</div>
           </div>
           <input className="rounded bg-white/10 px-3 py-2 outline-none md:col-span-3" placeholder="Description" value={form.description||''} onChange={e=>setForm(prev=>({...prev, description:e.target.value}))} />
+          <textarea className="rounded bg-white/10 px-3 py-2 outline-none md:col-span-3" placeholder="How to Use" value={form.details?.howToUse||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), howToUse:e.target.value }}))} />
+          <textarea className="rounded bg-white/10 px-3 py-2 outline-none md:col-span-3" placeholder="Key Ingredients" value={form.details?.keyIngredients||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), keyIngredients:e.target.value }}))} />
+          <textarea className="rounded bg-white/10 px-3 py-2 outline-none md:col-span-3" placeholder="Ingredient Benefits" value={form.details?.ingredientBenefits||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), ingredientBenefits:e.target.value }}))} />
+          <textarea className="rounded bg-white/10 px-3 py-2 outline-none md:col-span-3" placeholder="Bullet Highlights" value={form.details?.bulletHighlights||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), bulletHighlights:e.target.value }}))} />
           <div className="md:col-span-3">
             <div className="mb-1 text-xs text-white/70">PDP Media (images or 1 video)</div>
             <input multiple type="file" accept="image/*,video/*" onChange={e=>setFormPdpImages(Array.from(e.target.files||[]))} />
@@ -314,9 +342,10 @@ function ProductsManager() {
             <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="Search..." value={query} onChange={e=>setQuery(e.target.value)} />
             <select className="rounded bg-white/10 px-3 py-2 outline-none" value={categoryFilter} onChange={e=>setCategoryFilter(e.target.value)}>
               <option value="">All categories</option>
-              {[...new Set(items.map(p=>p.category).filter(Boolean))].map(c => (
-                <option key={c} value={c!}>{c}</option>
-              ))}
+              <option value="Face Care">Face Care</option>
+              <option value="Hair Care">Hair Care</option>
+              <option value="Body Care">Body Care</option>
+              <option value="Skincare">Skincare</option>
             </select>
             <div className="flex items-center gap-2">
               <select className="rounded bg-white/10 px-3 py-2 outline-none" value={sortKey} onChange={e=>setSortKey(e.target.value as any)}>
@@ -326,7 +355,11 @@ function ProductsManager() {
               </select>
               <button className="rounded bg-white/10 px-3 py-2 text-sm hover:bg-white/15" onClick={()=>setSortDir(d=>d==='asc'?'desc':'asc')}>{sortDir==='asc'?'Asc':'Desc'}</button>
             </div>
-            <button onClick={load} className="rounded bg-white/10 px-3 py-2 text-sm hover:bg-white/15">Refresh</button>
+              <button onClick={load} className="rounded bg-white/10 px-3 py-2 text-sm hover:bg-white/15">Refresh</button>
+              <form onSubmit={async (e)=>{e.preventDefault(); const input=(e.currentTarget.elements.namedItem('csv') as HTMLInputElement); const file=input.files?.[0]; if(!file) return; const fd=new FormData(); fd.append('file', file); const r=await fetch(`${apiBase}/api/products-csv/upload`,{method:'POST', body: fd}); if(r.ok){alert('CSV uploaded');} else {alert('CSV upload failed')}}} className="flex items-center gap-2">
+                <input name="csv" type="file" accept=".csv" className="text-xs" />
+                <button className="rounded bg-white/10 px-3 py-2 text-sm hover:bg-white/15">Upload CSV</button>
+              </form>
           </div>
         </div>
         {loading ? <p>Loading...</p> : error ? <p className="text-red-400">{error}</p> : (
@@ -453,7 +486,18 @@ function ProductsManager() {
               <form onSubmit={saveEdit} className="grid grid-cols-1 gap-3 md:grid-cols-3">
                 <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="Slug" value={editing.slug||''} onChange={e=>setEditing(prev=>({...(prev as any), slug:e.target.value}))} required />
                 <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="Title" value={editing.title||''} onChange={e=>setEditing(prev=>({...(prev as any), title:e.target.value}))} required />
-                <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="Category" value={editing.category||''} onChange={e=>setEditing(prev=>({...(prev as any), category:e.target.value}))} />
+                <select 
+                  className="rounded bg-white/10 px-3 py-2 outline-none" 
+                  value={editing.category||''} 
+                  onChange={e=>setEditing(prev=>({...(prev as any), category:e.target.value}))}
+                  required
+                >
+                  <option value="">Select Category</option>
+                  <option value="Face Care">Face Care</option>
+                  <option value="Hair Care">Hair Care</option>
+                  <option value="Body Care">Body Care</option>
+                  <option value="Skincare">Skincare</option>
+                </select>
                 <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="Price" value={editing.price||''} onChange={e=>setEditing(prev=>({...(prev as any), price:e.target.value}))} />
                 <input className="rounded bg-white/10 px-3 py-2 outline-none md:col-span-2" placeholder="List Image URL" value={editing.list_image||''} onChange={e=>setEditing(prev=>({...(prev as any), list_image:e.target.value}))} />
                 <input className="rounded bg-white/10 px-3 py-2 outline-none md:col-span-3" placeholder="Description" value={editing.description||''} onChange={e=>setEditing(prev=>({...(prev as any), description:e.target.value}))} />

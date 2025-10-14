@@ -161,59 +161,59 @@ function AppContent() {
           </header>
       <RouterView addToCart={addToCart} addToWishlist={addToWishlist} />
 
-      <footer className="border-t border-slate-200 bg-slate-50/60 py-10 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-400">
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-4 sm:grid-cols-2 md:grid-cols-6">
+      <footer className="border-t border-gray-800 bg-gray-900 py-16 text-sm text-gray-400">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-4 sm:grid-cols-2 md:grid-cols-6">
           <div className="md:col-span-2">
-            <h3 className="mb-2 text-base font-semibold text-slate-900 dark:text-slate-100">Nefol</h3>
-            <p className="dark:text-slate-300">Natural and safe skincare for every skin type. Made with love and care.</p>
-            <p className="mt-2 dark:text-slate-300">Call us: +91-8887-847213</p>
+            <h3 className="mb-4 text-xl font-light tracking-wide text-white">Nefol</h3>
+            <p className="text-gray-400 font-light leading-relaxed">Natural and safe skincare for every skin type. Made with love and care.</p>
+            <p className="mt-4 text-gray-400 font-light">Call us: +91-8887-847213</p>
           </div>
           <div>
-            <h4 className="mb-2 font-semibold text-slate-900 dark:text-slate-100">Categories</h4>
-            <ul className="space-y-1">
-              <li><a href="#/" className="hover:text-slate-900 dark:hover:text-slate-100">Home</a></li>
-              <li><a href="#/body" className="hover:text-slate-900 dark:hover:text-slate-100">Body</a></li>
-              <li><a href="#/face" className="hover:text-slate-900 dark:hover:text-slate-100">Face</a></li>
-              <li><a href="#/hair" className="hover:text-slate-900 dark:hover:text-slate-100">Hair</a></li>
-              <li><a href="#/combos" className="hover:text-slate-900 dark:hover:text-slate-100">Combos</a></li>
-              <li><a href="#/blog" className="hover:text-slate-900 dark:hover:text-slate-100">Blogs</a></li>
+            <h4 className="mb-4 text-sm font-medium tracking-wide uppercase text-white">Categories</h4>
+            <ul className="space-y-2">
+              <li><a href="#/" className="text-gray-400 hover:text-white transition-colors font-light">Home</a></li>
+              <li><a href="#/body" className="text-gray-400 hover:text-white transition-colors font-light">Body</a></li>
+              <li><a href="#/face" className="text-gray-400 hover:text-white transition-colors font-light">Face</a></li>
+              <li><a href="#/hair" className="text-gray-400 hover:text-white transition-colors font-light">Hair</a></li>
+              <li><a href="#/combos" className="text-gray-400 hover:text-white transition-colors font-light">Combos</a></li>
+              <li><a href="#/blog" className="text-gray-400 hover:text-white transition-colors font-light">Blogs</a></li>
             </ul>
           </div>
           <div>
-            <h4 className="mb-2 font-semibold text-slate-900 dark:text-slate-100">Further Info.</h4>
-            <ul className="space-y-1">
-              <li><a href="#/shop" className="hover:text-slate-900 dark:hover:text-slate-100">Shop</a></li>
-              <li><a href="#/orders" className="hover:text-slate-900 dark:hover:text-slate-100">Orders</a></li>
-              <li><a href="#/account" className="hover:text-slate-900 dark:hover:text-slate-100">Account</a></li>
-              <li><a href="#/community" className="hover:text-slate-900 dark:hover:text-slate-100">Community</a></li>
+            <h4 className="mb-4 text-sm font-medium tracking-wide uppercase text-white">Further Info.</h4>
+            <ul className="space-y-2">
+              <li><a href="#/shop" className="text-gray-400 hover:text-white transition-colors font-light">Shop</a></li>
+              <li><a href="#/orders" className="text-gray-400 hover:text-white transition-colors font-light">Orders</a></li>
+              <li><a href="#/account" className="text-gray-400 hover:text-white transition-colors font-light">Account</a></li>
+              <li><a href="#/community" className="text-gray-400 hover:text-white transition-colors font-light">Community</a></li>
             </ul>
           </div>
           <div>
-            <h4 className="mb-2 font-semibold text-slate-900 dark:text-slate-100">Company Info</h4>
-            <ul className="space-y-1">
-              <li><a href="#/about" className="hover:text-slate-900 dark:hover:text-slate-100">About Us</a></li>
-              <li><a href="#/faq" className="hover:text-slate-900 dark:hover:text-slate-100">FAQ</a></li>
-              <li><a href="#/chairperson-message" className="hover:text-slate-900 dark:hover:text-slate-100">Chairperson Message</a></li>
-              <li><a href="#/usp" className="hover:text-slate-900 dark:hover:text-slate-100">Why Choose Nefol</a></li>
-              <li><a href="#/blue-tea-benefits" className="hover:text-slate-900 dark:hover:text-slate-100">Blue Tea Benefits</a></li>
+            <h4 className="mb-4 text-sm font-medium tracking-wide uppercase text-white">Company Info</h4>
+            <ul className="space-y-2">
+              <li><a href="#/about" className="text-gray-400 hover:text-white transition-colors font-light">About Us</a></li>
+              <li><a href="#/faq" className="text-gray-400 hover:text-white transition-colors font-light">FAQ</a></li>
+              <li><a href="#/chairperson-message" className="text-gray-400 hover:text-white transition-colors font-light">Chairperson Message</a></li>
+              <li><a href="#/usp" className="text-gray-400 hover:text-white transition-colors font-light">Why Choose Nefol</a></li>
+              <li><a href="#/blue-tea-benefits" className="text-gray-400 hover:text-white transition-colors font-light">Blue Tea Benefits</a></li>
             </ul>
           </div>
           <div>
-            <h4 className="mb-2 font-semibold text-slate-900 dark:text-slate-100">Customer Service</h4>
-            <ul className="space-y-1">
-              <li><a href="#/privacy-policy" className="hover:text-slate-900 dark:hover:text-slate-100">Privacy Policy</a></li>
-              <li><a href="#/refund-policy" className="hover:text-slate-900 dark:hover:text-slate-100">Refund Policy</a></li>
-              <li><a href="#/shipping-policy" className="hover:text-slate-900 dark:hover:text-slate-100">Shipping Policy</a></li>
-              <li><a href="#/terms-of-service" className="hover:text-slate-900 dark:hover:text-slate-100">Terms of Service</a></li>
+            <h4 className="mb-4 text-sm font-medium tracking-wide uppercase text-white">Customer Service</h4>
+            <ul className="space-y-2">
+              <li><a href="#/privacy-policy" className="text-gray-400 hover:text-white transition-colors font-light">Privacy Policy</a></li>
+              <li><a href="#/refund-policy" className="text-gray-400 hover:text-white transition-colors font-light">Refund Policy</a></li>
+              <li><a href="#/shipping-policy" className="text-gray-400 hover:text-white transition-colors font-light">Shipping Policy</a></li>
+              <li><a href="#/terms-of-service" className="text-gray-400 hover:text-white transition-colors font-light">Terms of Service</a></li>
             </ul>
           </div>
           <div className="md:col-span-2">
-            <h4 className="mb-2 font-semibold text-slate-900 dark:text-slate-100">Newsletter</h4>
+            <h4 className="mb-4 text-sm font-medium tracking-wide uppercase text-white">Newsletter</h4>
             <form onSubmit={(e) => e.preventDefault()} className="flex gap-2">
-              <input type="email" required placeholder="Your email" className="h-10 w-full rounded-md border border-slate-200 px-3 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100" />
-              <button className="h-10 rounded-md bg-blue-600 px-4 font-semibold text-white hover:bg-blue-700">Submit</button>
+              <input type="email" required placeholder="Your email" className="h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 text-gray-100 placeholder-gray-400 focus:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-600" />
+              <button className="h-10 rounded-md bg-gray-800 px-4 font-medium text-white hover:bg-gray-700 transition-colors border border-gray-700">Submit</button>
             </form>
-            <small className="mt-2 block dark:text-slate-300">©{new Date().getFullYear()} NEFOL • Made with ❤ by SearchMantra</small>
+            <small className="mt-4 block text-gray-400 font-light">©{new Date().getFullYear()} NEFOL • Made with ❤ by SearchMantra</small>
           </div>
         </div>
       </footer>

@@ -48,10 +48,17 @@ interface AppConfig {
   }
 }
 
+const getDynamicApiBase = () => {
+  const proto = window.location.protocol
+  const host = window.location.hostname
+  const port = (import.meta.env.VITE_API_PORT as string) || '4000'
+  return import.meta.env.VITE_API_URL || `${proto}//${host}:${port}`
+}
+
 class ConfigService {
   private config: AppConfig = {
     api: {
-      baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:4000',
+      baseUrl: getDynamicApiBase(),
       timeout: 30000,
       retries: 3
     },
@@ -139,7 +146,7 @@ class ConfigService {
   reset(): void {
     this.config = {
       api: {
-        baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:4000',
+        baseUrl: getDynamicApiBase(),
         timeout: 30000,
         retries: 3
       },

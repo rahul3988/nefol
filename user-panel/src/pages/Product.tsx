@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import type { Product } from '../types'
 import { useCart } from '../contexts/CartContext'
+import { getApiBase } from '../utils/apiBase'
 
 export default function ProductPage() {
   const [product, setProduct] = useState<Product | null>(null)
+  const [csvProduct, setCsvProduct] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [selectedImage, setSelectedImage] = useState(0)
   const [activeTab, setActiveTab] = useState<'description' | 'reviews' | 'ingredients'>('description')
@@ -18,10 +20,29 @@ export default function ProductPage() {
       const match = hash.match(/^#\/product\/([^?#]+)/)
       const slug = match?.[1]
       if (!slug) return
-      const apiBase = (import.meta as any).env.VITE_API_URL || 'http://localhost:4000'
+      const apiBase = getApiBase()
+      
+      // Fetch product data
       const res = await fetch(`${apiBase}/api/products/slug/${slug}`, { credentials: 'include' })
       if (!res.ok) { setProduct(null); setLoading(false); return }
       const r = await res.json()
+      
+      // Fetch CSV data
+      try {
+        const csvRes = await fetch(`${apiBase}/api/products-csv`)
+        if (csvRes.ok) {
+          const csvData = await csvRes.json()
+          const csvMatch = csvData.find((csv: any) => 
+            csv['Product Name']?.toLowerCase() === r.title?.toLowerCase() ||
+            csv['Product Title']?.toLowerCase() === r.title?.toLowerCase() ||
+            csv['SKU'] === r.slug
+          )
+          setCsvProduct(csvMatch)
+        }
+      } catch (error) {
+        console.error('Failed to fetch CSV data:', error)
+      }
+      
       const toAbs = (u?: string) => {
         if (!u) return ''
         if (/^https?:\/\//i.test(u)) return u
@@ -206,7 +227,25 @@ export default function ProductPage() {
                 </div>
               </div>
 
-              <div className="text-3xl font-bold text-slate-900 dark:text-slate-100">{product.price}</div>
+              <div className="text-3xl font-bold text-slate-900 dark:text-slate-100">
+                {(() => {
+                  const mrp = csvProduct?.['MRP (₹)'] || csvProduct?.['MRP'] || product.price || '₹599'
+                  const websitePrice = csvProduct?.['website price'] || csvProduct?.['Website Price'] || ''
+                  
+                  return websitePrice && websitePrice !== mrp ? (
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl font-medium line-through opacity-60 text-slate-500">
+                        {mrp}
+                      </span>
+                      <span className="text-3xl font-bold text-green-600">
+                        {websitePrice}
+                      </span>
+                    </div>
+                  ) : (
+                    <span>{mrp}</span>
+                  )
+                })()}
+              </div>
 
               {/* Quantity Selector */}
               <div className="flex items-center space-x-4">
@@ -346,28 +385,102 @@ export default function ProductPage() {
               {activeTab === 'description' && (
                 <div className="prose max-w-none">
                   <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                    {product.description}
+                    {csvProduct?.['Product Description (Long)'] || csvProduct?.['Long Description'] || product.description}
                   </p>
+                  
+                  {/* Key Features from CSV */}
+                  {csvProduct?.['Bullet Highlights (Short Desc.)'] && (
+                    <div className="mt-6">
+                      <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Key Features</h4>
+                      <ul className="list-disc list-inside space-y-1 text-sm text-slate-600 dark:text-slate-400">
+                        {csvProduct['Bullet Highlights (Short Desc.)'].split('\n').map((feature: string, index: number) => (
+                          <li key={index}>{feature.trim()}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  
                   <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">How to Use</h4>
                       <ol className="list-decimal list-inside space-y-1 text-sm text-slate-600 dark:text-slate-400">
-                        <li>Cleanse your face with a gentle cleanser</li>
-                        <li>Apply a small amount to face and neck</li>
-                        <li>Gently massage in circular motions</li>
-                        <li>Use twice daily for best results</li>
+                        {csvProduct?.['How to Use (Steps)'] ? 
+                          csvProduct['How to Use (Steps)'].split('\n').map((step: string, index: number) => (
+                            <li key={index}>{step.trim()}</li>
+                          )) :
+                          [
+                            'Cleanse your face with a gentle cleanser',
+                            'Apply a small amount to face and neck',
+                            'Gently massage in circular motions',
+                            'Use twice daily for best results'
+                          ].map((step, index) => (
+                            <li key={index}>{step}</li>
+                          ))
+                        }
                       </ol>
                     </div>
                     <div>
                       <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Benefits</h4>
                       <ul className="list-disc list-inside space-y-1 text-sm text-slate-600 dark:text-slate-400">
-                        <li>Deep hydration and nourishment</li>
-                        <li>Reduces signs of aging</li>
-                        <li>Improves skin texture and tone</li>
-                        <li>Protects against environmental damage</li>
+                        {csvProduct?.['Ingredient Benefits'] ? 
+                          csvProduct['Ingredient Benefits'].split('\n').map((benefit: string, index: number) => (
+                            <li key={index}>{benefit.trim()}</li>
+                          )) :
+                          [
+                            'Deep hydration and nourishment',
+                            'Reduces signs of aging',
+                            'Improves skin texture and tone',
+                            'Protects against environmental damage'
+                          ].map((benefit, index) => (
+                            <li key={index}>{benefit}</li>
+                          ))
+                        }
                       </ul>
                     </div>
                   </div>
+                  
+                  {/* Product Details from CSV */}
+                  {csvProduct && (
+                    <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-3">Product Details</h4>
+                        <div className="space-y-2 text-sm">
+                          {csvProduct['SKU'] && (
+                            <div className="flex justify-between">
+                              <span className="text-slate-600 dark:text-slate-400">SKU:</span>
+                              <span className="text-slate-900 dark:text-slate-100">{csvProduct['SKU']}</span>
+                            </div>
+                          )}
+                          {csvProduct['Net Quantity (Content)'] && (
+                            <div className="flex justify-between">
+                              <span className="text-slate-600 dark:text-slate-400">Net Quantity:</span>
+                              <span className="text-slate-900 dark:text-slate-100">{csvProduct['Net Quantity (Content)']}</span>
+                            </div>
+                          )}
+                          {csvProduct['Net Weight (Product Only)'] && (
+                            <div className="flex justify-between">
+                              <span className="text-slate-600 dark:text-slate-400">Net Weight:</span>
+                              <span className="text-slate-900 dark:text-slate-100">{csvProduct['Net Weight (Product Only)']}</span>
+                            </div>
+                          )}
+                          {csvProduct['Country of Origin'] && (
+                            <div className="flex justify-between">
+                              <span className="text-slate-600 dark:text-slate-400">Country of Origin:</span>
+                              <span className="text-slate-900 dark:text-slate-100">{csvProduct['Country of Origin']}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-3">Key Ingredients</h4>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">
+                          {csvProduct['Key Ingredients'] || 'Premium natural ingredients carefully selected for optimal skin health.'}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  
                   {/* PDP Banners (4-6) */}
                   <div className="mt-10 grid grid-cols-2 md:grid-cols-3 gap-4">
                     {getPdpBanners().map((src, i) => (
