@@ -622,9 +622,15 @@ export default function ProductPage() {
 }
 
 function derivePdpImages(row: any, toAbs: (u?: string)=>string): string[] {
-  if (row.pdp_images && Array.isArray(row.pdp_images) && row.pdp_images.length) return row.pdp_images.map((u: string) => toAbs(u))
-  if (row.list_image) return [toAbs(row.list_image)]
-  return []
+  const primary = row.list_image ? toAbs(row.list_image) : ''
+  const gallery = Array.isArray(row.pdp_images) ? row.pdp_images.map((u: string) => toAbs(u)) : []
+  const images: string[] = []
+  if (primary) images.push(primary)
+  for (const img of gallery) {
+    if (!img || img === primary) continue
+    images.push(img)
+  }
+  return images
 }
 
 function isVideo(url?: string): boolean {

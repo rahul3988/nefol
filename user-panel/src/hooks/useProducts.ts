@@ -22,15 +22,19 @@ export function useProducts() {
           const path = u.startsWith('/') ? u : `/${u}`
           return `${base}${path}`
         }
-        const mapped: Product[] = (rows || []).map((r: any) => ({
-          slug: r.slug,
-          title: r.title,
-          category: r.category,
-          price: r.price,
-          listImage: toAbs(r.list_image || ''),
-          pdpImages: derivePdpImages(r, toAbs),
-          description: r.description || ''
-        })).filter((p: Product) => p.slug && p.title)
+        const mapped: Product[] = (rows || []).map((r: any) => {
+          const listImage = toAbs(r.list_image || '')
+          const pdpImages = derivePdpImages(r, toAbs)
+          return {
+            slug: r.slug,
+            title: r.title,
+            category: r.category,
+            price: r.price,
+            listImage,
+            pdpImages,
+            description: r.description || ''
+          }
+        }).filter((p: Product) => p.slug && p.title)
         if (!cancelled) setItems(mapped)
       } catch (e: any) {
         if (!cancelled) setError(e?.message || 'Failed to load products')

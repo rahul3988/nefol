@@ -438,7 +438,7 @@ export default function Home() {
                 <div key={product.slug} className="bg-white rounded-lg shadow-sm group">
                   <div className="relative overflow-hidden rounded-t-lg">
                     <img 
-                      src={product.listImage || "/IMAGES/ANYTIME CREAM (3).jpg"} 
+                      src={(product.listImage || (product.pdpImages && product.pdpImages[0])) || "/IMAGES/ANYTIME CREAM (3).jpg"} 
                       alt={product.title}
                       className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105"
                     />

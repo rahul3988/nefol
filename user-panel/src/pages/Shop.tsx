@@ -21,7 +21,7 @@ export default function Shop({ addToCart, addToWishlist }: ShopProps) {
             {items.map((p) => (
               <article key={p.slug} className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-800">
                 <a href={`#/product/${p.slug}`}>
-                  <img src={p.listImage} alt={p.title} className="h-40 w-full rounded-lg border border-slate-200 object-cover dark:border-slate-600" loading="lazy" />
+                  <img src={p.listImage || (p.pdpImages && p.pdpImages[0])} alt={p.title} className="h-40 w-full rounded-lg border border-slate-200 object-cover dark:border-slate-600" loading="lazy" />
                 </a>
                 <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">{p.title}</h3>
                 <div className="flex items-baseline gap-2">
