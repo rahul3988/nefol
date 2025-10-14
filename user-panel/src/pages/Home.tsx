@@ -438,7 +438,13 @@ export default function Home() {
                 <div key={product.slug} className="bg-white rounded-lg shadow-sm group">
                   <div className="relative overflow-hidden rounded-t-lg">
                     <img 
-                      src={(product.listImage || (product.pdpImages && product.pdpImages[0])) || "/IMAGES/ANYTIME CREAM (3).jpg"} 
+                      src={(() => {
+                        const imageUrl = (product.listImage || (product.pdpImages && product.pdpImages[0])) || "/IMAGES/ANYTIME CREAM (3).jpg"
+                        console.log(`Home - Product "${product.title}" image URL:`, imageUrl)
+                        console.log(`Home - Product listImage:`, product.listImage)
+                        console.log(`Home - Product pdpImages:`, product.pdpImages)
+                        return imageUrl
+                      })()} 
                       alt={product.title}
                       className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105"
                     />
