@@ -23,13 +23,16 @@ export default function Face() {
   const fetchProducts = async () => {
     try {
       const apiBase = getApiBase()
+      console.log('Face page - API Base:', apiBase)
       const response = await fetch(`${apiBase}/api/products`)
+      console.log('Face page - Response status:', response.status)
       if (response.ok) {
         const data = await response.json()
+        console.log('Face page - All products:', data)
         // Filter products for face category
         const faceProducts = data.filter((product: Product) => {
           const category = (product.category || '').toLowerCase()
-          return category.includes('face') || 
+          const matches = category.includes('face') || 
                  category.includes('moisturizer') ||
                  category.includes('serum') ||
                  category.includes('mask') ||
@@ -38,7 +41,10 @@ export default function Face() {
                  category.includes('cleanser') ||
                  category.includes('toner') ||
                  category.includes('essence')
+          console.log(`Face page - Product "${product.title}" (category: "${product.category}") matches: ${matches}`)
+          return matches
         })
+        console.log('Face page - Filtered products:', faceProducts)
         setProducts(faceProducts)
       }
     } catch (error) {

@@ -67,9 +67,12 @@ export default function Home() {
   const fetchProducts = async () => {
     try {
       const apiBase = getApiBase()
+      console.log('Home page - API Base:', apiBase)
       const response = await fetch(`${apiBase}/api/products`)
+      console.log('Home page - Response status:', response.status)
       if (response.ok) {
         const data = await response.json()
+        console.log('Home page - All products:', data)
         setProducts(data)
       }
     } catch (error) {
@@ -321,7 +324,7 @@ export default function Home() {
                 }}
               >
                 <img
-                  src="/IMAGES/skin_categories.png"
+                  src="/IMAGES/body.jpg"
                   alt="Body"
                   className="block w-full h-full object-contain"
                   style={{ filter: 'drop-shadow(0 24px 30px rgba(0,0,0,0.28))' }}
@@ -342,7 +345,7 @@ export default function Home() {
                 }}
               >
                 <img
-                  src="/IMAGES/face_categories.svg"
+                  src="/IMAGES/face.jpg"
                   alt="Face"
                   className="block w-full h-full object-contain"
                   style={{ filter: 'drop-shadow(0 24px 30px rgba(0,0,0,0.28))' }}
@@ -363,7 +366,7 @@ export default function Home() {
                 }}
               >
                 <img
-                  src="/IMAGES/hair_categories.png"
+                  src="/IMAGES/hair.jpg"
                   alt="Hair"
                   className="block w-full h-full object-contain"
                   style={{ filter: 'drop-shadow(0 24px 30px rgba(0,0,0,0.28))' }}
@@ -384,7 +387,7 @@ export default function Home() {
                 }}
               >
                 <img
-                  src="/IMAGES/combo 3.3.jpg"
+                  src="/IMAGES/combo.jpg"
                   alt="Combos"
                   className="block w-full h-full object-contain"
                   style={{ filter: 'drop-shadow(0 24px 30px rgba(0,0,0,0.28))' }}
