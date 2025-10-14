@@ -17,14 +17,14 @@ export default function Community() {
   const fetchCommunityData = async () => {
     try {
       // Fetch community posts
-      const postsResponse = await fetch('http://localhost:4000/api/community/posts')
+      const postsResponse = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/community/posts`)
       if (postsResponse.ok) {
         const postsData = await postsResponse.json()
         setCommunityPosts(postsData)
       }
 
       // Fetch community stats
-      const statsResponse = await fetch('http://localhost:4000/api/community/stats')
+      const statsResponse = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/community/stats`)
       if (statsResponse.ok) {
         const statsData = await statsResponse.json()
         setCommunityStats(statsData)

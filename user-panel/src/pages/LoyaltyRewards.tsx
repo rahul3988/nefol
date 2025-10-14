@@ -31,7 +31,7 @@ export default function LoyaltyRewards() {
       }
 
       // Fetch user loyalty points
-      const pointsResponse = await fetch('http://localhost:4000/api/loyalty/points', {
+      const pointsResponse = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/loyalty/points`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -45,7 +45,7 @@ export default function LoyaltyRewards() {
       }
 
       // Fetch available rewards
-      const rewardsResponse = await fetch('http://localhost:4000/api/loyalty/rewards', {
+      const rewardsResponse = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/loyalty/rewards`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

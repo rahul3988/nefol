@@ -67,6 +67,9 @@ async function ensureSchema() {
       updated_at timestamptz default now()
     );
     
+    -- Ensure details column exists (for existing tables)
+    alter table products add column if not exists details jsonb default '{}'::jsonb;
+    
     create table if not exists users (
       id serial primary key,
       name text not null,
@@ -645,14 +648,28 @@ app.get('/api/products/slug/:slug', async (req, res) => {
 
 app.post('/api/products', async (req, res) => {
   try {
+    console.log('POST /api/products - Request body:', req.body)
     const { slug, title, category = '', price = '', listImage = '', description = '', details = {} } = req.body || {}
-    if (!slug || !title) return res.status(400).json({ error: 'slug and title are required' })
+    console.log('Extracted fields:', { slug, title, category, price, listImage, description, details })
+    
+    if (!slug || !title) {
+      console.log('Missing required fields: slug or title')
+      return res.status(400).json({ error: 'slug and title are required' })
+    }
+    
+    console.log('About to execute database query...')
     const { rows } = await pool.query(
       'insert into products (slug, title, category, price, list_image, description, details) values ($1,$2,$3,$4,$5,$6,$7) returning *',
       [slug, title, category, price, listImage, description, JSON.stringify(details)]
     )
+    console.log('Database query successful, created product:', rows[0])
     res.status(201).json(rows[0])
   } catch (err: any) {
+    console.error('POST /api/products - Error details:', err)
+    console.error('Error code:', err?.code)
+    console.error('Error message:', err?.message)
+    console.error('Error stack:', err?.stack)
+    
     if (err?.code === '23505') return res.status(409).json({ error: 'slug must be unique' })
     res.status(500).json({ error: 'Failed to create product' })
   }
@@ -676,8 +693,9 @@ app.put('/api/products/:id', async (req, res) => {
          category = coalesce($3, category),
          price = coalesce($4, price),
          list_image = coalesce($5, list_image),
-         description = coalesce($6, description)
-       where id = $7 returning *`,
+         description = coalesce($6, description),
+         details = coalesce($7, details)
+       where id = $8 returning *`,
       [
         slug ?? null,
         title ?? null,
@@ -685,6 +703,7 @@ app.put('/api/products/:id', async (req, res) => {
         price ?? null,
         listImage ?? null,
         description ?? null,
+        details ? JSON.stringify(details) : null,
         req.params.id
       ]
     )
@@ -722,12 +741,25 @@ app.delete('/api/products/:id', async (req, res) => {
   }
 })
 
-app.get('/api/health', async (_req, res) => {
+app.post('/api/test-create', async (req, res) => {
   try {
-    const result = await pool.query('select 1 as ok')
-    res.json({ status: 'ok', db: result.rows[0].ok === 1 })
-  } catch (err) {
-    res.status(500).json({ status: 'error', message: 'DB connection failed' })
+    console.log('Test create - Request body:', req.body)
+    const { slug, title } = req.body || {}
+    
+    if (!slug || !title) {
+      return res.status(400).json({ error: 'slug and title are required' })
+    }
+    
+    console.log('About to insert:', { slug, title })
+    const { rows } = await pool.query(
+      'insert into products (slug, title, category, price, list_image, description, details) values ($1,$2,$3,$4,$5,$6,$7) returning *',
+      [slug, title, '', '', '', '', '{}']
+    )
+    console.log('Insert successful:', rows[0])
+    res.status(201).json(rows[0])
+  } catch (err: any) {
+    console.error('Test create error:', err)
+    res.status(500).json({ error: 'Test create failed', details: err.message })
   }
 })
 

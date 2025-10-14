@@ -50,7 +50,7 @@ export default function Confirmation() {
 
   const fetchOrderDetails = async (orderNum: string) => {
     try {
-      const response = await fetch(`http://localhost:4000/api/orders/${orderNum}`)
+      const response = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/orders/${orderNum}`)
       if (response.ok) {
         const data = await response.json()
         setOrderDetails(data)

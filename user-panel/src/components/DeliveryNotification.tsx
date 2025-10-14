@@ -38,7 +38,7 @@ export default function DeliveryNotification({
 
     try {
       // Submit review to backend
-      const response = await fetch('http://localhost:4000/api/reviews', {
+      const response = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/reviews`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -52,7 +52,7 @@ export default function DeliveryNotification({
 
       if (response.ok) {
         // Award points to customer
-        await fetch('http://localhost:4000/api/loyalty/award-points', {
+        await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/loyalty/award-points`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -64,7 +64,7 @@ export default function DeliveryNotification({
         })
 
         // Send email notification about points
-        await fetch('http://localhost:4000/api/notifications/send', {
+        await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/notifications/send`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

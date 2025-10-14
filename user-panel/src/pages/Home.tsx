@@ -4,6 +4,7 @@ import { Heart, Star, ShoppingCart, Play, Volume2, VolumeX, Sparkles, Zap, Crown
 import { useCart } from '../contexts/CartContext'
 import { getApiBase } from '../utils/apiBase'
 import type { Product } from '../types'
+import SubscriptionModal from '../components/SubscriptionModal'
 
 export default function Home() {
   const { user, isAuthenticated } = useAuth()
@@ -18,6 +19,9 @@ export default function Home() {
   const [personalizedContent, setPersonalizedContent] = useState<any>(null)
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
   const [isMuted, setIsMuted] = useState(true)
+  const [currentComboIndex, setCurrentComboIndex] = useState(0)
+  const [activeShopTab, setActiveShopTab] = useState('NEW ARRIVALS')
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false)
 
   // Hero slideshow images (rotate every 3 seconds)
   const heroImages = [
@@ -33,13 +37,19 @@ export default function Home() {
     return () => window.clearInterval(id)
   }, [])
 
-  // Promotional banner (appears 3s after landing)
-  const [showPromo, setShowPromo] = useState(false)
-  const [promoDismissed, setPromoDismissed] = useState(false)
+  // Subscription modal (appears 5s after landing, only if not dismissed before)
   useEffect(() => {
-    const id = window.setTimeout(() => setShowPromo(true), 3000)
-    return () => window.clearTimeout(id)
+    const hasDismissedSubscription = localStorage.getItem('nefol-subscription-dismissed')
+    if (!hasDismissedSubscription) {
+      const id = window.setTimeout(() => setShowSubscriptionModal(true), 5000)
+      return () => window.clearTimeout(id)
+    }
   }, [])
+
+  const handleCloseSubscriptionModal = () => {
+    setShowSubscriptionModal(false)
+    localStorage.setItem('nefol-subscription-dismissed', 'true')
+  }
 
   useEffect(() => {
     fetchProducts()
@@ -198,6 +208,42 @@ export default function Home() {
     }
   }
 
+  // Helper functions for SHOP WHAT'S NEW section
+  const getNewArrivals = () => {
+    return products
+      .sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
+      .slice(0, 3)
+  }
+
+  const getBestSellers = () => {
+    // For now, we'll use products with highest IDs as best sellers
+    // In a real app, this would be based on actual sales data
+    return products
+      .sort((a, b) => (b.id || 0) - (a.id || 0))
+      .slice(0, 3)
+  }
+
+  const getTopRated = () => {
+    // For now, we'll use products with highest IDs as top rated
+    // In a real app, this would be based on actual ratings data
+    return products
+      .sort((a, b) => (b.id || 0) - (a.id || 0))
+      .slice(0, 3)
+  }
+
+  const getCurrentShopProducts = () => {
+    switch (activeShopTab) {
+      case 'NEW ARRIVALS':
+        return getNewArrivals()
+      case 'BEST SELLERS':
+        return getBestSellers()
+      case 'TOP RATED':
+        return getTopRated()
+      default:
+        return getNewArrivals()
+    }
+  }
+
   // Dynamically scale videos in the social carousel: center = large, sides = medium/small
   useEffect(() => {
     const scroller = document.getElementById('video-scroller') as HTMLElement | null
@@ -233,38 +279,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen" style={{backgroundColor: '#F4F9F9'}}>
-      {/* Sliding Promotional Banner */}
-      <div className="relative overflow-hidden">
-        <div
-          className={`fixed top-1/2 right-0 z-50 transform transition-transform duration-500 ${showPromo && !promoDismissed ? 'translate-x-0' : 'translate-x-full'}`}
-        >
-          <div className="shadow-xl rounded-l-xl flex items-center gap-4 px-5 py-4"
-               style={{backgroundColor: '#1B4965'}}>
-            <div className="text-white">
-              <div className="text-sm uppercase tracking-wide opacity-90">Limited Offer</div>
-              <div className="text-lg font-semibold">Subscribe to get exclusive deals</div>
-            </div>
-            <form onSubmit={(e) => e.preventDefault()} className="flex items-center gap-2">
-              <input
-                type="email"
-                required
-                placeholder="Your email"
-                className="h-9 w-56 rounded-md border border-white/30 bg-white/10 px-3 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"
-              />
-              <button className="h-9 rounded-md bg-white/90 px-4 text-sm font-medium text-black hover:bg-white">
-                Subscribe
-              </button>
-            </form>
-            <button
-              aria-label="Dismiss"
-              onClick={() => setPromoDismissed(true)}
-              className="ml-2 h-8 w-8 rounded-full bg-white/20 text-white hover:bg-white/30 flex items-center justify-center"
-            >
-              ×
-              </button>
-          </div>
-        </div>
-      </div>
       {/* Hero Banner Section - Enhanced Colors */}
       <section className="relative py-20" style={{background: 'linear-gradient(135deg, #4B97C9 0%, #D0E8F2 50%, #9DB4C0 100%)'}}>
         <div className="mx-auto max-w-7xl px-4">
@@ -407,21 +421,42 @@ export default function Home() {
               SHOP WHAT'S NEW
             </h2>
             <div className="flex justify-center space-x-8 mb-8">
-              <button className="text-sm font-medium tracking-wide uppercase pb-2 border-b-2" style={{color: '#1B4965', borderColor: '#4B97C9'}}>
+              <button 
+                onClick={() => setActiveShopTab('NEW ARRIVALS')}
+                className="text-sm font-medium tracking-wide uppercase pb-2 border-b-2" 
+                style={{
+                  color: activeShopTab === 'NEW ARRIVALS' ? '#1B4965' : '#9DB4C0',
+                  borderColor: activeShopTab === 'NEW ARRIVALS' ? '#4B97C9' : 'transparent'
+                }}
+              >
                 NEW ARRIVALS
               </button>
-              <button className="text-sm font-medium tracking-wide uppercase pb-2 border-b-2" style={{color: '#1B4965', borderColor: '#4B97C9'}}>
+              <button 
+                onClick={() => setActiveShopTab('BEST SELLERS')}
+                className="text-sm font-medium tracking-wide uppercase pb-2 border-b-2" 
+                style={{
+                  color: activeShopTab === 'BEST SELLERS' ? '#1B4965' : '#9DB4C0',
+                  borderColor: activeShopTab === 'BEST SELLERS' ? '#4B97C9' : 'transparent'
+                }}
+              >
                 BEST SELLERS
               </button>
-              <button className="text-sm font-medium tracking-wide uppercase pb-2" style={{color: '#9DB4C0'}}>
+              <button 
+                onClick={() => setActiveShopTab('TOP RATED')}
+                className="text-sm font-medium tracking-wide uppercase pb-2 border-b-2" 
+                style={{
+                  color: activeShopTab === 'TOP RATED' ? '#1B4965' : '#9DB4C0',
+                  borderColor: activeShopTab === 'TOP RATED' ? '#4B97C9' : 'transparent'
+                }}
+              >
                 TOP RATED
               </button>
             </div>
         </div>
 
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[...Array(4)].map((_, i) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[...Array(3)].map((_, i) => (
                 <div key={i} className="bg-white rounded-lg shadow-sm">
                   <div className="h-80 rounded-t-lg" style={{backgroundColor: '#D0E8F2'}}></div>
                   <div className="p-6">
@@ -433,8 +468,8 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {products.slice(0, 4).map((product, index) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {getCurrentShopProducts().map((product, index) => (
                 <div key={product.slug} className="bg-white rounded-lg shadow-sm group">
                   <div className="relative overflow-hidden rounded-t-lg">
                   <img 
@@ -901,6 +936,12 @@ export default function Home() {
       >
         <Sparkles className="w-6 h-6" />
       </button>
+
+      {/* Subscription Modal */}
+      <SubscriptionModal 
+        isOpen={showSubscriptionModal}
+        onClose={handleCloseSubscriptionModal}
+      />
     </main>
   )
 }

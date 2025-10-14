@@ -1,8 +1,24 @@
 import React, { useState, useEffect } from 'react'
 import { Package, Clock, CheckCircle, XCircle, Truck } from 'lucide-react'
 
+interface OrderItem {
+  id: number
+  name: string
+  quantity: number
+  price: string
+}
+
+interface Order {
+  id: number
+  orderNumber: string
+  date: string
+  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
+  total: string
+  items: OrderItem[]
+}
+
 export default function Orders() {
-  const [orders, setOrders] = useState([])
+  const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -17,7 +33,7 @@ export default function Orders() {
         return
       }
 
-      const response = await fetch('http://localhost:4000/api/orders', {
+      const response = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/orders`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -39,7 +55,7 @@ export default function Orders() {
     }
   }
 
-  const getStatusIcon = (status) => {
+  const getStatusIcon = (status: Order['status']) => {
     switch (status) {
       case 'delivered':
         return <CheckCircle className="w-5 h-5 text-green-600" />
@@ -54,7 +70,7 @@ export default function Orders() {
     }
   }
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: Order['status']) => {
     switch (status) {
       case 'delivered':
         return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
@@ -141,7 +157,7 @@ export default function Orders() {
                     Items Ordered:
                   </h4>
                   <div className="space-y-2">
-                    {order.items.map((item, index) => (
+                    {order.items.map((item: OrderItem, index: number) => (
                       <div key={index} className="flex items-center justify-between text-sm">
                         <span className="text-slate-600 dark:text-slate-400">
                           {item.name} x {item.quantity}

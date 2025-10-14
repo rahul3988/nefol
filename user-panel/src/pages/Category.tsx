@@ -63,9 +63,11 @@ export default function CategoryPage() {
 
   if (loading) {
     return (
-      <main className="py-10 dark:bg-slate-900">
-        <div className="mx-auto max-w-6xl px-4">
-          <p className="text-slate-600 dark:text-slate-400">Loading...</p>
+      <main className="min-h-screen py-10" style={{backgroundColor: '#F4F9F9'}}>
+        <div className="mx-auto max-w-7xl px-4">
+          <div className="text-center py-12">
+            <p className="text-lg" style={{color: '#9DB4C0'}}>Loading...</p>
+          </div>
         </div>
       </main>
     )
@@ -73,37 +75,84 @@ export default function CategoryPage() {
 
   if (error) {
     return (
-      <main className="py-10 dark:bg-slate-900">
-        <div className="mx-auto max-w-6xl px-4">
-          <p className="text-red-600 dark:text-red-400">{error}</p>
+      <main className="min-h-screen py-10" style={{backgroundColor: '#F4F9F9'}}>
+        <div className="mx-auto max-w-7xl px-4">
+          <div className="text-center py-12">
+            <p className="text-lg text-red-600">{error}</p>
+          </div>
         </div>
       </main>
     )
   }
 
   return (
-    <main className="py-10 dark:bg-slate-900">
-      <div className="mx-auto max-w-6xl px-4">
-        <h1 className="mb-2 text-3xl font-bold text-slate-900 dark:text-slate-100">{getCategoryTitle(category)}</h1>
-        <p className="mb-6 text-slate-600 dark:text-slate-400">{getCategoryDescription(category)}</p>
+    <main className="min-h-screen py-10" style={{backgroundColor: '#F4F9F9'}}>
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-serif mb-4" style={{color: '#1B4965'}}>
+            {getCategoryTitle(category).toUpperCase()}
+          </h1>
+          <p className="text-lg font-light max-w-2xl mx-auto" style={{color: '#9DB4C0'}}>
+            {getCategoryDescription(category)}
+          </p>
+        </div>
         
         {filteredProducts.length === 0 ? (
-          <p className="text-slate-500 dark:text-slate-400">No products found in this category.</p>
+          <div className="text-center py-12">
+            <p className="text-lg" style={{color: '#9DB4C0'}}>No products found in this category.</p>
+          </div>
         ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {filteredProducts.map((product) => (
-              <article key={product.slug} className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-800">
-                <a href={`#/product/${product.slug}`}>
-                  <img src={product.listImage} alt={product.title} className="h-40 w-full rounded-lg border border-slate-200 object-cover dark:border-slate-600" loading="lazy" />
-                </a>
-                <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">{product.title}</h3>
-                <p className="text-xs text-slate-600 dark:text-slate-400">{product.category}</p>
-                <div className="flex items-baseline gap-2">
-                  <span className="font-bold text-slate-900 dark:text-slate-100">{product.price}</span>
+              <article key={product.slug} className="bg-white rounded-lg shadow-sm group overflow-hidden">
+                <div className="relative overflow-hidden">
+                  <a href={`#/product/${product.slug}`}>
+                    <img 
+                      src={product.listImage || (product.pdpImages && product.pdpImages[0])} 
+                      alt={product.title} 
+                      className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105" 
+                      loading="lazy" 
+                    />
+                  </a>
+                  <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <button className="w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg">
+                      <span className="text-lg" style={{color: '#1B4965'}}>❤️</span>
+                    </button>
+                  </div>
+                  <div className="absolute top-4 left-4">
+                    <span className="text-white px-3 py-1 text-xs font-medium tracking-wide uppercase rounded-full" style={{backgroundColor: '#4B97C9'}}>
+                      {product.category}
+                    </span>
+                  </div>
                 </div>
-                <div className="mt-1 grid grid-cols-2 gap-2">
-                  <a href={`#/product/${product.slug}`} className="rounded-md border border-slate-200 px-3 py-2 text-center font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">View</a>
-                  <button className="rounded-md bg-blue-600 px-3 py-2 font-semibold text-white hover:bg-blue-700">Add</button>
+                <div className="p-6">
+                  <h3 className="text-lg font-medium tracking-wide mb-2" style={{color: '#1B4965'}}>
+                    {product.title}
+                  </h3>
+                  <div className="flex items-center mb-4">
+                    <div className="flex text-yellow-400">
+                      <span className="text-sm">★★★★★</span>
+                    </div>
+                    <span className="text-sm ml-2" style={{color: '#9DB4C0'}}>4.5 (45 Reviews)</span>
+                  </div>
+                  <div className="flex items-center justify-between pt-2">
+                    <span className="text-lg font-medium" style={{color: '#1B4965'}}>
+                      {product.price || '₹599'}
+                    </span>
+                    <div className="flex gap-2">
+                      <button className="px-4 py-2 text-white text-xs font-medium transition-all duration-300 tracking-wide uppercase rounded shadow-lg"
+                        style={{backgroundColor: '#4B97C9'}}>
+                        ADD TO CART
+                      </button>
+                      <a 
+                        href={`#/product/${product.slug}`}
+                        className="px-4 py-2 text-white text-xs font-medium transition-all duration-300 tracking-wide uppercase rounded shadow-lg"
+                        style={{backgroundColor: '#1B4965'}}
+                      >
+                        VIEW
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </article>
             ))}

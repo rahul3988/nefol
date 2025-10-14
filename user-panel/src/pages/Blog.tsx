@@ -48,106 +48,121 @@ export default function Blog() {
       image: '/IMAGES/HAIR MASK (5).jpg',
       featured: false
     },
-    {
-      id: 'miracle-blue-pea',
-      title: 'The Miracle of Blue Pea Flower in Skincare',
-      date: 'May 01, 2025',
-      excerpt: 'The world of skincare is constantly evolving, with nature offering an abundance of ingredients that promise to enhance our beauty routines. One such gem is the Blue Pea Flower...',
-      image: '/IMAGES/FACE SERUM (5).jpg',
-      featured: false
-    }
   ]
 
-  const featuredPost = posts.find(post => post.featured)
-  const regularPosts = posts.filter(post => !post.featured)
-
   return (
-    <main className="py-10 dark:bg-slate-900">
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="mb-8 text-center">
-          <h1 className="mb-4 text-4xl font-bold text-slate-900 dark:text-slate-100">Nefol Blogs</h1>
-          <p className="mx-auto max-w-3xl text-lg text-slate-600 dark:text-slate-400">
-            Discover expert skincare tips, ingredient insights, and beauty routines from our team of skincare professionals.
+    <main className="min-h-screen py-10" style={{backgroundColor: '#F4F9F9'}}>
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-serif mb-4" style={{color: '#1B4965'}}>BLOG</h1>
+          <p className="text-lg font-light max-w-2xl mx-auto" style={{color: '#9DB4C0'}}>
+            Discover the latest insights on natural skincare, beauty tips, and the science behind our ingredients.
           </p>
         </div>
 
         {/* Featured Post */}
-        {featuredPost && (
-          <div className="mb-12">
-            <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-lg dark:border-slate-700 dark:bg-slate-800">
-              <div className="md:flex">
-                <div className="md:w-1/2">
+        {posts.filter(post => post.featured).map((post) => (
+          <div key={post.id} className="mb-16">
+            <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+                <div className="relative">
                   <img 
-                    src={featuredPost.image} 
-                    alt={featuredPost.title} 
-                    className="h-64 w-full object-cover md:h-full" 
-                    loading="lazy" 
+                    src={post.image} 
+                    alt={post.title}
+                    className="w-full h-96 lg:h-full object-cover"
                   />
-                </div>
-                <div className="p-8 md:w-1/2">
-                  <div className="mb-2">
-                    <span className="inline-block rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                      Featured
+                  <div className="absolute top-4 left-4">
+                    <span className="text-white px-3 py-1 text-xs font-medium tracking-wide uppercase rounded-full" style={{backgroundColor: '#4B97C9'}}>
+                      FEATURED
                     </span>
                   </div>
-                  <h2 className="mb-4 text-2xl font-bold text-slate-900 dark:text-slate-100">{featuredPost.title}</h2>
-                  <p className="mb-4 text-slate-600 dark:text-slate-400">{featuredPost.excerpt}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-500 dark:text-slate-400">On {featuredPost.date} by Nefol Aesthetics Pvt. Ltd.</span>
-                    <button className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors">
-                      Read More
-                    </button>
+                </div>
+                <div className="p-8 flex flex-col justify-center">
+                  <div className="mb-4">
+                    <span className="text-sm font-light" style={{color: '#9DB4C0'}}>{post.date}</span>
                   </div>
+                  <h2 className="text-3xl font-serif mb-4" style={{color: '#1B4965'}}>
+                    {post.title}
+                  </h2>
+                  <p className="text-lg font-light mb-6 leading-relaxed" style={{color: '#9DB4C0'}}>
+                    {post.excerpt}
+                  </p>
+                  <a 
+                    href={`#/blog/${post.id}`}
+                    className="inline-block px-8 py-4 text-white font-medium transition-all duration-300 text-sm tracking-wide uppercase shadow-lg"
+                    style={{backgroundColor: '#1B4965'}}
+                  >
+                    READ MORE
+                  </a>
                 </div>
               </div>
             </div>
           </div>
-        )}
+        ))}
 
-        {/* Recent Articles Section */}
-        <div className="mb-8">
-          <h2 className="mb-6 text-2xl font-bold text-slate-900 dark:text-slate-100">Recent Articles</h2>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {regularPosts.map((post) => (
-              <article key={post.id} className="rounded-xl border border-slate-200 bg-white overflow-hidden hover:shadow-lg transition-shadow dark:border-slate-700 dark:bg-slate-800">
+        {/* Blog Posts Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {posts.filter(post => !post.featured).map((post) => (
+            <article key={post.id} className="bg-white rounded-lg shadow-sm group overflow-hidden">
+              <div className="relative overflow-hidden">
                 <img 
                   src={post.image} 
-                  alt={post.title} 
-                  className="h-48 w-full object-cover" 
-                  loading="lazy" 
+                  alt={post.title}
+                  className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="p-6">
-                  <h3 className="mb-2 text-lg font-semibold text-slate-900 dark:text-slate-100">{post.title}</h3>
-                  <p className="mb-4 text-sm text-slate-600 dark:text-slate-400 line-clamp-3">{post.excerpt}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-slate-500 dark:text-slate-400">{post.date}</span>
-                    <button className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:text-blue-300">
-                      Read More →
-                    </button>
-                  </div>
+                <div className="absolute top-4 left-4">
+                  <span className="text-white px-3 py-1 text-xs font-medium tracking-wide uppercase rounded-full" style={{backgroundColor: '#4B97C9'}}>
+                    BLOG
+                  </span>
                 </div>
-              </article>
-            ))}
-          </div>
+              </div>
+              <div className="p-6">
+                <div className="mb-3">
+                  <span className="text-sm font-light" style={{color: '#9DB4C0'}}>{post.date}</span>
+                </div>
+                <h3 className="text-xl font-serif mb-3" style={{color: '#1B4965'}}>
+                  {post.title}
+                </h3>
+                <p className="text-sm font-light mb-4 leading-relaxed" style={{color: '#9DB4C0'}}>
+                  {post.excerpt}
+                </p>
+                <a 
+                  href={`#/blog/${post.id}`}
+                  className="inline-block px-6 py-3 text-white font-medium transition-all duration-300 text-xs tracking-wide uppercase shadow-lg"
+                  style={{backgroundColor: '#4B97C9'}}
+                >
+                  READ MORE
+                </a>
+              </div>
+            </article>
+          ))}
         </div>
 
-        {/* Blog Tags */}
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-6 dark:border-slate-700 dark:bg-slate-800">
-          <h3 className="mb-4 text-lg font-semibold text-slate-900 dark:text-slate-100">Blog Tags</h3>
-          <div className="flex flex-wrap gap-2">
-            {['Body lotion', 'Face Care', 'Nefol', 'skin care', 'summer', 'Blue Tea', 'Natural Ingredients', 'Skincare Routine'].map((tag) => (
-              <span 
-                key={tag}
-                className="rounded-full bg-white px-3 py-1 text-sm text-slate-600 border border-slate-200 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer dark:bg-slate-700 dark:text-slate-300 dark:border-slate-600 dark:hover:bg-blue-900 dark:hover:text-blue-200"
+        {/* Newsletter Signup */}
+        <div className="mt-16">
+          <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+            <h3 className="text-2xl font-serif mb-4" style={{color: '#1B4965'}}>Stay Updated</h3>
+            <p className="text-lg font-light mb-6" style={{color: '#9DB4C0'}}>
+              Subscribe to our newsletter for the latest beauty tips, product updates, and exclusive offers.
+            </p>
+            <form onSubmit={(e) => e.preventDefault()} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+              <input 
+                type="email" 
+                placeholder="Enter your email"
+                className="flex-1 h-12 rounded-lg border border-gray-300 px-4 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                required 
+              />
+              <button 
+                type="submit"
+                className="px-8 py-3 text-white font-medium transition-all duration-300 text-sm tracking-wide uppercase shadow-lg rounded-lg"
+                style={{backgroundColor: '#1B4965'}}
               >
-                {tag}
-              </span>
-            ))}
+                SUBSCRIBE
+              </button>
+            </form>
           </div>
         </div>
       </div>
     </main>
   )
 }
-
-

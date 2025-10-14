@@ -54,7 +54,7 @@ function ProductsManager() {
   const [formMainImage, setFormMainImage] = useState<File | null>(null)
   const [formPdpImages, setFormPdpImages] = useState<File[]>([])
 
-  const apiBase = (import.meta as any).env.VITE_API_URL || 'http://localhost:4000'
+  const apiBase = (import.meta as any).env.VITE_API_URL || `http://${window.location.hostname}:4000`
   const toAbs = (u?: string) => {
     if (!u) return ''
     if (/^https?:\/\//i.test(u)) return u
@@ -202,6 +202,9 @@ function ProductsManager() {
     <div className="space-y-6">
       <div className="metric-card">
         <h2 className="mb-4 text-lg font-semibold text-gray-900">Bulk Import</h2>
+        <div className="mb-3 rounded bg-blue-50 p-3 text-sm text-blue-800">
+          <strong>Note:</strong> CSV import will only import text fields (title, category, price, description). Images need to be uploaded manually after import.
+        </div>
         <div className="flex flex-col gap-3 md:flex-row md:items-center">
           <input type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" onChange={async (e)=>{
             const file = e.target.files?.[0]
@@ -240,10 +243,11 @@ function ProductsManager() {
                 const slugVal = tryGet(r, ['slug']) || slugify(title)
                 const category = tryGet(r, ['category','cat'])
                 const priceRaw = tryGet(r, ['price','mrp','amount'])
-                const listImg = tryGet(r, ['listimage','image','mainimage','thumbnail'])
+                // Skip image import from CSV - will be uploaded manually later
+                // const listImg = tryGet(r, ['listimage','image','mainimage','thumbnail'])
                 const description = tryGet(r, ['description','desc'])
                 const price = priceRaw ? String(priceRaw) : ''
-                const payload = { slug: slugVal, title, category, price, listImage: listImg, description }
+                const payload = { slug: slugVal, title, category, price, listImage: '', description, details: {} }
                 if (!payload.title || !payload.slug) { failed++; errors.push(`Row ${i+1}: missing title/slug`); continue }
                 const res = await fetch(`${apiBase}/api/products`, {
                   method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
@@ -269,7 +273,7 @@ function ProductsManager() {
                   <th className="py-2 pr-3">slug</th>
                   <th className="py-2 pr-3">category</th>
                   <th className="py-2 pr-3">price</th>
-                  <th className="py-2 pr-3">list_image</th>
+                  <th className="py-2 pr-3">description</th>
                 </tr>
               </thead>
               <tbody>
@@ -279,7 +283,7 @@ function ProductsManager() {
                     <td className="py-1 pr-3">{r.slug || slugify(r.title||'')}</td>
                     <td className="py-1 pr-3">{r.category}</td>
                     <td className="py-1 pr-3">{r.price}</td>
-                    <td className="py-1 pr-3">{r.list_image || r.image}</td>
+                    <td className="py-1 pr-3">{r.description}</td>
                   </tr>
                 ))}
               </tbody>
@@ -291,10 +295,10 @@ function ProductsManager() {
       <div className="rounded-lg border border-white/10 bg-white/5 p-6">
         <h2 className="mb-4 text-lg font-semibold">Add Product</h2>
         <form onSubmit={submit} className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="Slug" value={form.slug||''} onChange={e=>setForm(prev=>({...prev, slug:e.target.value}))} required />
-          <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="Title" value={form.title||''} onChange={e=>setForm(prev=>({...prev, title:e.target.value}))} required />
+          <input className="rounded bg-white/10 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Slug" value={form.slug||''} onChange={e=>setForm(prev=>({...prev, slug:e.target.value}))} required />
+          <input className="rounded bg-white/10 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Title" value={form.title||''} onChange={e=>setForm(prev=>({...prev, title:e.target.value}))} required />
           <select 
-            className="rounded bg-white/10 px-3 py-2 outline-none" 
+            className="rounded bg-white/10 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" 
             value={form.category||''} 
             onChange={e=>setForm(prev=>({...prev, category:e.target.value}))}
             required
@@ -305,28 +309,28 @@ function ProductsManager() {
             <option value="Body Care">Body Care</option>
             <option value="Skincare">Skincare</option>
           </select>
-              <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="Price (display)" value={form.price||''} onChange={e=>setForm(prev=>({...prev, price:e.target.value}))} />
-              <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="SKU" value={form.details?.sku||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), sku:e.target.value }}))} />
-              <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="HSN Code" value={form.details?.hsn||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), hsn:e.target.value }}))} />
-              <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="MRP" value={form.details?.mrp||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), mrp:e.target.value }}))} />
-              <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="Website Price (Discounted)" value={form.details?.websitePrice||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), websitePrice:e.target.value }}))} />
+              <input className="rounded bg-white/10 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Price (display)" value={form.price||''} onChange={e=>setForm(prev=>({...prev, price:e.target.value}))} />
+              <input className="rounded bg-white/10 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="SKU" value={form.details?.sku||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), sku:e.target.value }}))} />
+              <input className="rounded bg-white/10 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="HSN Code" value={form.details?.hsn||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), hsn:e.target.value }}))} />
+              <input className="rounded bg-white/10 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="MRP" value={form.details?.mrp||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), mrp:e.target.value }}))} />
+              <input className="rounded bg-white/10 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Website Price (Discounted)" value={form.details?.websitePrice||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), websitePrice:e.target.value }}))} />
           <div className="md:col-span-2">
             <div className="mb-1 text-xs text-white/70">Main Image (upload or fallback URL)</div>
             <div className="flex items-center gap-2">
-              <input type="file" accept="image/*" onChange={e=>setFormMainImage(e.target.files?.[0]||null)} />
+              <input type="file" accept="image/*" onChange={e=>setFormMainImage(e.target.files?.[0]||null)} className="rounded border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
               <span className="text-xs text-white/50">or</span>
-              <input className="flex-1 rounded bg-white/10 px-3 py-2 outline-none" placeholder="List Image URL (optional)" value={form.list_image||''} onChange={e=>setForm(prev=>({...prev, list_image:e.target.value}))} />
+              <input className="flex-1 rounded bg-white/10 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="List Image URL (optional)" value={form.list_image||''} onChange={e=>setForm(prev=>({...prev, list_image:e.target.value}))} />
             </div>
             <div className="mt-2 text-xs text-white/50">Add additional video in PDP Media below.</div>
           </div>
-          <input className="rounded bg-white/10 px-3 py-2 outline-none md:col-span-3" placeholder="Description" value={form.description||''} onChange={e=>setForm(prev=>({...prev, description:e.target.value}))} />
-          <textarea className="rounded bg-white/10 px-3 py-2 outline-none md:col-span-3" placeholder="How to Use" value={form.details?.howToUse||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), howToUse:e.target.value }}))} />
-          <textarea className="rounded bg-white/10 px-3 py-2 outline-none md:col-span-3" placeholder="Key Ingredients" value={form.details?.keyIngredients||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), keyIngredients:e.target.value }}))} />
-          <textarea className="rounded bg-white/10 px-3 py-2 outline-none md:col-span-3" placeholder="Ingredient Benefits" value={form.details?.ingredientBenefits||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), ingredientBenefits:e.target.value }}))} />
-          <textarea className="rounded bg-white/10 px-3 py-2 outline-none md:col-span-3" placeholder="Bullet Highlights" value={form.details?.bulletHighlights||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), bulletHighlights:e.target.value }}))} />
+          <input className="rounded bg-white/10 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 md:col-span-3" placeholder="Description" value={form.description||''} onChange={e=>setForm(prev=>({...prev, description:e.target.value}))} />
+          <textarea className="rounded bg-white/10 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 md:col-span-3" placeholder="How to Use" value={form.details?.howToUse||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), howToUse:e.target.value }}))} />
+          <textarea className="rounded bg-white/10 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 md:col-span-3" placeholder="Key Ingredients" value={form.details?.keyIngredients||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), keyIngredients:e.target.value }}))} />
+          <textarea className="rounded bg-white/10 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 md:col-span-3" placeholder="Ingredient Benefits" value={form.details?.ingredientBenefits||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), ingredientBenefits:e.target.value }}))} />
+          <textarea className="rounded bg-white/10 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 md:col-span-3" placeholder="Bullet Highlights" value={form.details?.bulletHighlights||''} onChange={e=>setForm(prev=>({...prev, details: { ...(prev.details||{}), bulletHighlights:e.target.value }}))} />
           <div className="md:col-span-3">
             <div className="mb-1 text-xs text-white/70">PDP Media (images or 1 video)</div>
-            <input multiple type="file" accept="image/*,video/*" onChange={e=>setFormPdpImages(Array.from(e.target.files||[]))} />
+            <input multiple type="file" accept="image/*,video/*" onChange={e=>setFormPdpImages(Array.from(e.target.files||[]))} className="rounded border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
             <div className="mt-2 text-xs text-white/50">Tip: Upload up to 7 images and 1 short video (mp4/webm).</div>
           </div>
           <div className="md:col-span-3">
@@ -339,8 +343,8 @@ function ProductsManager() {
         <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <h2 className="text-lg font-semibold">Products</h2>
           <div className="flex flex-1 flex-col gap-2 md:flex-row md:items-center md:justify-end">
-            <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="Search..." value={query} onChange={e=>setQuery(e.target.value)} />
-            <select className="rounded bg-white/10 px-3 py-2 outline-none" value={categoryFilter} onChange={e=>setCategoryFilter(e.target.value)}>
+            <input className="rounded bg-white/10 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Search..." value={query} onChange={e=>setQuery(e.target.value)} />
+            <select className="rounded bg-white/10 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" value={categoryFilter} onChange={e=>setCategoryFilter(e.target.value)}>
               <option value="">All categories</option>
               <option value="Face Care">Face Care</option>
               <option value="Hair Care">Hair Care</option>
@@ -348,7 +352,7 @@ function ProductsManager() {
               <option value="Skincare">Skincare</option>
             </select>
             <div className="flex items-center gap-2">
-              <select className="rounded bg-white/10 px-3 py-2 outline-none" value={sortKey} onChange={e=>setSortKey(e.target.value as any)}>
+              <select className="rounded bg-white/10 px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" value={sortKey} onChange={e=>setSortKey(e.target.value as any)}>
                 <option value="title">Title</option>
                 <option value="price">Price</option>
                 <option value="category">Category</option>
@@ -357,7 +361,7 @@ function ProductsManager() {
             </div>
               <button onClick={load} className="rounded bg-white/10 px-3 py-2 text-sm hover:bg-white/15">Refresh</button>
               <form onSubmit={async (e)=>{e.preventDefault(); const input=(e.currentTarget.elements.namedItem('csv') as HTMLInputElement); const file=input.files?.[0]; if(!file) return; const fd=new FormData(); fd.append('file', file); const r=await fetch(`${apiBase}/api/products-csv/upload`,{method:'POST', body: fd}); if(r.ok){alert('CSV uploaded');} else {alert('CSV upload failed')}}} className="flex items-center gap-2">
-                <input name="csv" type="file" accept=".csv" className="text-xs" />
+                <input name="csv" type="file" accept=".csv" className="rounded border border-gray-300 bg-white px-3 py-2 text-xs text-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
                 <button className="rounded bg-white/10 px-3 py-2 text-sm hover:bg-white/15">Upload CSV</button>
               </form>
           </div>
@@ -402,17 +406,17 @@ function ProductsManager() {
         )}
         {selected && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-            <div className="w-full max-w-2xl rounded-lg border border-white/10 bg-slate-900 p-6">
+            <div className="w-full max-w-2xl rounded-lg border border-gray-300 bg-white p-6 shadow-xl">
               <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-lg font-semibold">Manage Images — {selected.title}</h3>
-                <button onClick={()=>setSelected(null)} className="rounded bg-white/10 px-3 py-1 text-sm hover:bg-white/15">Close</button>
+                <h3 className="text-lg font-semibold text-gray-900">Manage Images — {selected.title}</h3>
+                <button onClick={()=>setSelected(null)} className="rounded bg-gray-200 px-3 py-1 text-sm text-gray-700 hover:bg-gray-300">Close</button>
               </div>
               <div className="space-y-4">
                 <div>
-                  <div className="mb-2 text-sm text-white/70">Main image</div>
+                  <div className="mb-2 text-sm text-gray-700">Main image</div>
                   <div className="flex items-center gap-3">
-                    {selected.list_image ? <img src={toAbs(selected.list_image)} className="h-16 w-16 rounded object-cover" /> : <div className="h-16 w-16 rounded border border-white/10" />}
-                    <input type="file" accept="image/*" onChange={async e=>{
+                    {selected.list_image ? <img src={toAbs(selected.list_image)} className="h-16 w-16 rounded object-cover" /> : <div className="h-16 w-16 rounded border border-gray-300 bg-gray-50" />}
+                    <input type="file" accept="image/*" className="rounded border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500" onChange={async e=>{
                       const file = e.target.files?.[0]
                       if (!file) return
                       try {
@@ -438,7 +442,7 @@ function ProductsManager() {
                   </div>
                 </div>
                 <div>
-                  <div className="mb-2 text-sm text-white/70">PDP images</div>
+                  <div className="mb-2 text-sm text-gray-700">PDP images</div>
                   <div className="flex flex-wrap gap-2">
                     {pdpImages.map((u,idx)=>{
                       const abs = toAbs(u)
@@ -451,7 +455,7 @@ function ProductsManager() {
                     })}
                   </div>
                   <div className="mt-2">
-                    <input multiple type="file" accept="image/*,video/*" onChange={async e=>{
+                    <input multiple type="file" accept="image/*,video/*" className="rounded border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500" onChange={async e=>{
                       const files = Array.from(e.target.files || [])
                       if (!files.length) return
                       try {
@@ -478,16 +482,16 @@ function ProductsManager() {
         )}
         {editing && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-            <div className="w-full max-w-2xl rounded-lg border border-white/10 bg-slate-900 p-6">
+            <div className="w-full max-w-2xl rounded-lg border border-gray-300 bg-white p-6 shadow-xl">
               <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-lg font-semibold">Edit Product</h3>
-                <button onClick={()=>setEditing(null)} className="rounded bg-white/10 px-3 py-1 text-sm hover:bg-white/15">Close</button>
+                <h3 className="text-lg font-semibold text-gray-900">Edit Product</h3>
+                <button onClick={()=>setEditing(null)} className="rounded bg-gray-200 px-3 py-1 text-sm text-gray-700 hover:bg-gray-300">Close</button>
               </div>
               <form onSubmit={saveEdit} className="grid grid-cols-1 gap-3 md:grid-cols-3">
-                <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="Slug" value={editing.slug||''} onChange={e=>setEditing(prev=>({...(prev as any), slug:e.target.value}))} required />
-                <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="Title" value={editing.title||''} onChange={e=>setEditing(prev=>({...(prev as any), title:e.target.value}))} required />
+                <input className="rounded border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Slug" value={editing.slug||''} onChange={e=>setEditing(prev=>({...(prev as any), slug:e.target.value}))} required />
+                <input className="rounded border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Title" value={editing.title||''} onChange={e=>setEditing(prev=>({...(prev as any), title:e.target.value}))} required />
                 <select 
-                  className="rounded bg-white/10 px-3 py-2 outline-none" 
+                  className="rounded border border-gray-300 bg-white px-3 py-2 text-gray-900 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" 
                   value={editing.category||''} 
                   onChange={e=>setEditing(prev=>({...(prev as any), category:e.target.value}))}
                   required
@@ -498,9 +502,9 @@ function ProductsManager() {
                   <option value="Body Care">Body Care</option>
                   <option value="Skincare">Skincare</option>
                 </select>
-                <input className="rounded bg-white/10 px-3 py-2 outline-none" placeholder="Price" value={editing.price||''} onChange={e=>setEditing(prev=>({...(prev as any), price:e.target.value}))} />
-                <input className="rounded bg-white/10 px-3 py-2 outline-none md:col-span-2" placeholder="List Image URL" value={editing.list_image||''} onChange={e=>setEditing(prev=>({...(prev as any), list_image:e.target.value}))} />
-                <input className="rounded bg-white/10 px-3 py-2 outline-none md:col-span-3" placeholder="Description" value={editing.description||''} onChange={e=>setEditing(prev=>({...(prev as any), description:e.target.value}))} />
+                <input className="rounded border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Price" value={editing.price||''} onChange={e=>setEditing(prev=>({...(prev as any), price:e.target.value}))} />
+                <input className="rounded border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 md:col-span-2" placeholder="List Image URL" value={editing.list_image||''} onChange={e=>setEditing(prev=>({...(prev as any), list_image:e.target.value}))} />
+                <input className="rounded border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 md:col-span-3" placeholder="Description" value={editing.description||''} onChange={e=>setEditing(prev=>({...(prev as any), description:e.target.value}))} />
                 <div className="md:col-span-3">
                   <button className="rounded bg-blue-600 px-4 py-2 font-semibold hover:bg-blue-700">Save Changes</button>
                 </div>

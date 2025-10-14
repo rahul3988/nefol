@@ -32,7 +32,7 @@ export default function UsersPage() {
   const fetchUsers = async () => {
     try {
       setLoading(true)
-      const response = await fetch('http://localhost:4000/api/users')
+      const response = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/users`)
       if (response.ok) {
         const data = await response.json()
         setUsers(data)

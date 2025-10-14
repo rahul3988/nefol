@@ -8,7 +8,7 @@ class SocketService {
   connect() {
     if (this.socket?.connected) return
 
-    this.socket = io('http://localhost:4000', {
+    this.socket = io(`http://${window.location.hostname}:4000`, {
       transports: ['websocket', 'polling']
     })
 

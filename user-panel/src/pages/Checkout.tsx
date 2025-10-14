@@ -70,7 +70,7 @@ export default function Checkout() {
 
   const fetchPaymentMethods = async () => {
     try {
-      const response = await fetch('http://localhost:4000/api/payment-gateways')
+      const response = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/payment-gateways`)
       if (response.ok) {
         const data = await response.json()
         setAvailablePaymentMethods(data.filter((gateway: any) => gateway.is_active))
@@ -82,7 +82,7 @@ export default function Checkout() {
 
   const applyDiscountCode = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/discounts/apply`, {
+      const response = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/discounts/apply`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code: discountCode, amount: calcSubtotal })
@@ -139,7 +139,7 @@ export default function Checkout() {
     try {
       const orderNumber = `NEFOL-${Date.now()}`
       
-      const res = await fetch('http://localhost:4000/api/orders', {
+      const res = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

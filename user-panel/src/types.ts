@@ -1,4 +1,5 @@
 export type Product = {
+  id?: number
   slug: string
   title: string
   category?: string
@@ -6,6 +7,7 @@ export type Product = {
   listImage: string
   pdpImages: string[]
   description: string
+  created_at?: string
 }
 
 

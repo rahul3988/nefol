@@ -43,7 +43,7 @@ const VideoManager: React.FC = () => {
     formData.append('file', file)
     formData.append('type', type)
 
-    const response = await fetch('http://localhost:4000/api/upload', {
+    const response = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/upload`, {
       method: 'POST',
       body: formData
     })
@@ -97,7 +97,7 @@ const VideoManager: React.FC = () => {
 
   const fetchVideos = async () => {
     try {
-      const response = await fetch('http://localhost:4000/api/videos')
+      const response = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/videos`)
       if (response.ok) {
         const data = await response.json()
         setVideos(data)
@@ -162,8 +162,8 @@ const VideoManager: React.FC = () => {
       const videoType = selectedFile ? 'local' : getVideoTypeFromUrl(formData.video_url)
 
       const url = editingVideo 
-        ? `http://localhost:4000/api/videos/${editingVideo.id}`
-        : 'http://localhost:4000/api/videos'
+        ? `${window.location.protocol}//${window.location.hostname}:4000/api/videos/${editingVideo.id}`
+        : `${window.location.protocol}//${window.location.hostname}:4000/api/videos`
       
       const method = editingVideo ? 'PUT' : 'POST'
 
@@ -221,7 +221,8 @@ const VideoManager: React.FC = () => {
       price: video.price,
       size: video.size,
       thumbnail_url: video.thumbnail_url,
-      is_active: video.is_active
+      is_active: video.is_active,
+      video_type: video.video_type
     })
     setShowAddModal(true)
   }
@@ -230,7 +231,7 @@ const VideoManager: React.FC = () => {
     if (!confirm('Are you sure you want to delete this video?')) return
 
     try {
-      const response = await fetch(`http://localhost:4000/api/videos/${id}`, {
+      const response = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/videos/${id}`, {
         method: 'DELETE'
       })
 
@@ -244,7 +245,7 @@ const VideoManager: React.FC = () => {
 
   const toggleActive = async (video: Video) => {
     try {
-      const response = await fetch(`http://localhost:4000/api/videos/${video.id}`, {
+      const response = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/videos/${video.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -275,7 +276,8 @@ const VideoManager: React.FC = () => {
               price: '',
               size: 'medium',
               thumbnail_url: '',
-              is_active: true
+              is_active: true,
+              video_type: 'local'
             })
             setShowAddModal(true)
           }}

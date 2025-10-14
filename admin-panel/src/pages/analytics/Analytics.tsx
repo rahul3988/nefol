@@ -33,7 +33,7 @@ export default function Analytics() {
   const [loading, setLoading] = useState(true)
   const [timeRange, setTimeRange] = useState('30d')
 
-  const apiBase = (import.meta as any).env.VITE_API_URL || 'http://localhost:4000'
+  const apiBase = (import.meta as any).env.VITE_API_URL || `http://${window.location.hostname}:4000`
 
   useEffect(() => {
     loadAnalyticsData()

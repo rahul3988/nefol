@@ -86,7 +86,7 @@ export default function Profile() {
         return
       }
 
-      const response = await fetch('http://localhost:4000/api/users/profile', {
+      const response = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/users/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -140,7 +140,7 @@ export default function Profile() {
       const token = localStorage.getItem('token')
       if (!token) return
 
-      const response = await fetch('http://localhost:4000/api/orders', {
+      const response = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/orders`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -170,7 +170,7 @@ export default function Profile() {
       const token = localStorage.getItem('token')
       if (!token) return
 
-      const response = await fetch('http://localhost:4000/api/users/saved-cards', {
+      const response = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/users/saved-cards`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -198,7 +198,7 @@ export default function Profile() {
         return
       }
 
-      const response = await fetch('http://localhost:4000/api/users/profile', {
+      const response = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/users/profile`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -288,7 +288,7 @@ export default function Profile() {
         phone: newAddress.phone || profile!.phone
       }
 
-      const response = await fetch('http://localhost:4000/api/users/profile', {
+      const response = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/users/profile`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

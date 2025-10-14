@@ -29,7 +29,7 @@ export default function Marketing() {
   const [activeTab, setActiveTab] = useState<'campaigns' | 'templates' | 'audiences'>('campaigns')
   const [showCreateModal, setShowCreateModal] = useState(false)
 
-  const apiBase = (import.meta as any).env.VITE_API_URL || 'http://localhost:4000'
+  const apiBase = (import.meta as any).env.VITE_API_URL || `http://${window.location.hostname}:4000`
 
   useEffect(() => {
     loadCampaigns()

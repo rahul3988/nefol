@@ -48,347 +48,202 @@ Though known for its detox powers, charcoal also has calming effects. It may hel
 Rich in ascorbic acid (vitamin C), Yuja helps neutralize free radicals and protect skin cells from oxidative damage caused by UV rays and pollution. It also helps fade hyperpigmentation, dark spots, and uneven skin tone by inhibiting tyrosinase, the enzyme responsible for melanin production—leading to a more radiant, luminous complexion.
 
 **Powerful Antioxidant Defense**
-Beyond vitamin C, Yuja contains flavonoids and phenolic acids that work in synergy to fight oxidative stress. These antioxidants strengthen the skin's barrier, preventing premature aging and inflammation.
+Yuja's high concentration of vitamin C and flavonoids provides robust antioxidant protection, helping to neutralize harmful free radicals that contribute to premature aging. This helps maintain skin's youthful appearance and vitality.
 
-**Boosts Collagen for Firmer Skin**
-Vitamin C is essential for collagen synthesis. By supporting the enzymes that stabilize and build collagen, Yuja promotes firmer, plumper skin and helps reduce the appearance of fine lines.
+**Collagen Synthesis Support**
+Vitamin C is essential for collagen production, the protein that keeps skin firm and elastic. Regular use of Yuja-infused products can help improve skin texture and reduce the appearance of fine lines and wrinkles.
 
-**Soothes and Protects**
-Yuja also has anti-inflammatory and antibacterial properties, helping to calm irritation and support skin health—especially when exposed to environmental aggressors.`
+**Natural Skin Renewal**
+The fruit's natural acids gently exfoliate the skin, promoting cell turnover and revealing fresher, brighter skin underneath. This helps improve overall skin texture and radiance.`
   },
   {
-    id: 'grapeseed',
-    name: 'Grapeseed Extract',
-    image: '/IMAGES/grapseed.png',
-    description: `Lightweight yet incredibly potent, Grapeseed Extract is packed with antioxidants, essential fatty acids, and vitamin E, making it a multitasking hero for skin that needs hydration, protection, and renewal. Derived from the seeds of grapes, this botanical powerhouse is especially loved for its ability to nourish without clogging pores.
+    id: 'papaya',
+    name: 'Papaya',
+    image: '/IMAGES/papaya.png',
+    description: `Papaya is a tropical fruit powerhouse packed with enzymes, vitamins, and antioxidants that work wonders for the skin. Rich in papain (a natural enzyme), vitamin C, and beta-carotene, papaya offers gentle exfoliation, brightening, and anti-aging benefits.
 
-**Antioxidant-Rich & Anti-Aging**
-Loaded with proanthocyanidins and flavonoids, Grapeseed Extract helps defend skin against free radicals and environmental damage, reducing the appearance of fine lines, wrinkles, and age spots. These antioxidants also support collagen production, improving skin firmness and elasticity over time.
+**Natural Enzyme Exfoliation**
+Papain, the key enzyme in papaya, gently breaks down dead skin cells and protein debris on the skin's surface. This natural exfoliation is much gentler than harsh scrubs, making it suitable for sensitive skin while effectively revealing smoother, brighter skin.
 
-**Deep Hydration Without Heaviness**
-Rich in omega-6 fatty acids and vitamin E, grapeseed oil provides lightweight moisturization that absorbs quickly, leaving skin soft, smooth, and nourished—without feeling greasy.
+**Skin Brightening and Tone Improvement**
+Papaya's high vitamin C content helps inhibit melanin production, reducing dark spots and hyperpigmentation. It also contains alpha-hydroxy acids (AHAs) that promote cell turnover, leading to a more even skin tone and radiant complexion.
 
-**Soothes Acne-Prone and Sensitive Skin**
-With its low comedogenic rating, Grapeseed Extract is gentle enough for oily or acne-prone skin. It helps balance sebum, reduce redness and inflammation, and supports clear, calm skin.
+**Anti-Aging and Antioxidant Protection**
+Rich in antioxidants like beta-carotene and vitamin C, papaya helps protect the skin from free radical damage caused by UV exposure and environmental pollutants. This helps prevent premature aging and maintains skin's youthful appearance.
 
-**Fades Dark Spots and Scars**
-The powerful combination of antioxidants and vitamin E works to lighten hyperpigmentation, diminish acne scars, and promote a more even, radiant skin tone.
-
-**Strengthens and Protects**
-Thanks to compounds like resveratrol and oligomeric proanthocyanidins, Grapeseed Extract helps fortify the skin against UV damage and other environmental stressors—leaving your skin resilient and glowing.`
+**Hydration and Nourishment**
+Papaya contains natural moisturizing properties and essential vitamins that help keep the skin hydrated and nourished. Its gentle nature makes it suitable for all skin types, including sensitive skin.`
   },
   {
     id: 'shea-butter',
     name: 'Shea Butter',
     image: '/IMAGES/shea butter.png',
-    description: `A rich, nourishing ingredient long treasured in African skincare traditions, Shea Butter is a luxurious emollient packed with essential fatty acids, vitamins, and anti-inflammatory compounds. Known for its ability to deeply hydrate, soothe, and protect, it's a true multitasker for restoring the skin's barrier and maintaining a healthy glow.
+    description: `Shea butter is a luxurious, nutrient-rich fat extracted from the nuts of the African shea tree. Revered for its exceptional moisturizing and healing properties, it's been used for centuries in traditional African skincare and has become a staple in modern beauty formulations.
 
-**Intense Moisture & Skin Barrier Repair**
-With a high concentration of oleic, stearic, linoleic, and palmitic acids, Shea Butter mimics the skin's natural lipids, helping to restore and strengthen the skin barrier. It delivers long-lasting hydration, keeping skin soft, smooth, and supple.
+**Deep Moisturization and Hydration**
+Shea butter is rich in fatty acids and vitamins that provide intense hydration to the skin. Its emollient properties help lock in moisture, leaving the skin feeling soft, supple, and well-nourished throughout the day.
 
-**Calms Inflammation & Soothes Irritation**
-Rich in triterpenes like lupeol and amyrins, Shea Butter exhibits powerful anti-inflammatory effects. It helps reduce redness, irritation, and sensitivity, making it ideal for conditions like rosacea, eczema, or post-exfoliation care.
+**Natural Healing and Repair**
+Containing vitamins A and E, shea butter supports the skin's natural healing process. It helps repair damaged skin cells and promotes the regeneration of healthy tissue, making it beneficial for dry, cracked, or irritated skin.
 
-**Anti-Aging & Antioxidant Support**
-Shea Butter contains vitamin E, vitamin A, and cinnamic acid derivatives that help neutralize free radicals, reducing the visible signs of premature aging such as fine lines and dullness.
+**Anti-Inflammatory and Soothing**
+Shea butter has natural anti-inflammatory properties that help calm irritated or sensitive skin. It's particularly effective for conditions like eczema, dermatitis, and other inflammatory skin issues.
 
-**Gentle and Non-Comedogenic**
-Despite being deeply nourishing, Shea Butter is non-comedogenic for most skin types, meaning it hydrates without clogging pores. It's suitable for dry, sensitive, and even acne-prone skin when used in balanced formulations.`
+**Protection Against Environmental Damage**
+Rich in antioxidants, shea butter helps protect the skin from environmental stressors like pollution and UV damage. It forms a natural barrier that helps maintain skin health and prevents moisture loss.`
   },
   {
-    id: 'mulberry',
-    name: 'Mulberry Extract',
-    image: '/IMAGES/mulberry.png',
-    description: `A gentle yet powerful botanical, Mulberry extract is rich in antioxidants, vitamins, and skin-brightening compounds that help promote a clear, even-toned, and youthful complexion. Used in traditional skincare remedies and now supported by modern research, Mulberry is especially valued for its ability to fade dark spots and calm irritation.
+    id: 'coconut-oil',
+    name: 'Coconut Oil',
+    image: '/IMAGES/coconut oil.png',
+    description: `Coconut oil is a versatile, natural ingredient that has been used in traditional skincare for centuries. Rich in medium-chain fatty acids and lauric acid, it offers excellent moisturizing, antimicrobial, and protective properties for both skin and hair.
 
-**Brightens Skin and Reduces Hyperpigmentation**
-Mulberry is a natural tyrosinase inhibitor, helping to slow down melanin production. This makes it highly effective at lightening dark spots, blemishes, and uneven skin tone, leaving skin looking more luminous and radiant.
+**Intensive Moisturization**
+Coconut oil's unique fatty acid composition allows it to penetrate deeply into the skin, providing long-lasting hydration. It helps restore the skin's natural moisture barrier and prevents water loss, keeping the skin soft and supple.
 
-**Powerful Antioxidant Protection**
-Packed with antioxidants like anthocyanins, flavonoids (rutin and quercetin), resveratrol, and vitamin C, Mulberry helps protect the skin from free radicals, UV damage, and premature aging, keeping your complexion youthful and vibrant.
+**Antimicrobial and Antibacterial Properties**
+Lauric acid, which makes up about 50% of coconut oil's fatty acids, has strong antimicrobial properties. This helps protect the skin from harmful bacteria and may help prevent acne and other bacterial skin infections.
 
-**Anti-Aging Benefits**
-By supporting collagen health and fighting oxidative stress, Mulberry extract helps reduce the appearance of fine lines and wrinkles while improving skin elasticity.
+**Natural Anti-Aging Benefits**
+Rich in antioxidants, coconut oil helps protect the skin from free radical damage that contributes to premature aging. It also contains vitamin E, which supports skin health and helps maintain a youthful appearance.
 
-**Acne and Blemish Control**
-Thanks to its antibacterial and anti-inflammatory properties, Mulberry can help regulate sebum production, soothe irritation, and reduce breakouts—making it a gentle solution for acne-prone or sensitive skin.
-
-**Soothing and Hydrating**
-Mulberry is also hydrating and calming, helping to relieve dry, irritated skin while enhancing your skin's natural glow.`
+**Gentle and Versatile**
+Coconut oil is gentle enough for sensitive skin and can be used for various skincare needs, from moisturizing to makeup removal. Its natural composition makes it suitable for all skin types when used appropriately.`
   }
 ]
 
 export default function Ingredients() {
   const [selectedIngredient, setSelectedIngredient] = useState(ingredients[0])
-  const [showText, setShowText] = useState(false)
-  const [isAnimating, setIsAnimating] = useState(false)
-  const [clickedImage, setClickedImage] = useState<string | null>(null)
-
-  const handleImageClick = (ingredient: typeof ingredients[0]) => {
-    setClickedImage(ingredient.id)
-    setIsAnimating(true)
-    
-    // Start the skyrocket animation
-    setTimeout(() => {
-      setSelectedIngredient(ingredient)
-      setShowText(true)
-      setIsAnimating(false)
-    }, 800) // Animation duration
-  }
-
-  const handleCloseText = () => {
-    setShowText(false)
-    setClickedImage(null)
-  }
 
   return (
-    <main className="py-10 dark:bg-slate-900">
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="mb-8 text-center">
-          <h1 className="mb-4 text-4xl font-bold text-slate-900 dark:text-slate-100">Explore Our Ingredients</h1>
-          <p className="mx-auto max-w-3xl text-lg text-slate-600 dark:text-slate-400">
-            At Nefol, we use natural, effective, and skin-friendly ingredients that are carefully selected for their benefits. 
-            Every product is made with love, care, and science — free from harsh chemicals, parabens, and toxins.
+    <main className="min-h-screen py-10" style={{backgroundColor: '#F4F9F9'}}>
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-serif mb-4" style={{color: '#1B4965'}}>INGREDIENTS</h1>
+          <p className="text-lg font-light max-w-2xl mx-auto" style={{color: '#9DB4C0'}}>
+            Discover the powerful natural ingredients that make our products effective and gentle on your skin.
           </p>
         </div>
 
-        {/* Full-width Image Gallery */}
-        <div className="space-y-4">
-          {ingredients.map((ingredient) => (
-            <div key={ingredient.id} className="relative">
-              <button
-                onClick={() => handleImageClick(ingredient)}
-                className={`group relative w-full overflow-hidden rounded-xl transition-all duration-300 hover:scale-[1.02] ${
-                  clickedImage === ingredient.id && isAnimating ? 'skyrocket-animation' : ''
-                }`}
-                disabled={isAnimating}
-              >
-                <img
-                  src={ingredient.image}
-                  alt={ingredient.name}
-                  className={`h-96 w-full object-cover transition-transform duration-500 group-hover:scale-105 ${
-                    clickedImage === ingredient.id && isAnimating ? 'animate-pulse' : ''
-                  }`}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6">
-                  <h3 className="text-2xl font-bold text-white">{ingredient.name}</h3>
-                </div>
-                
-                {/* Skyrocket Animation Overlay */}
-                {clickedImage === ingredient.id && isAnimating && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                    <div className="skyrocket-explosion">
-                      <div className="explosion-circle"></div>
-                      <div className="explosion-particles">
-                        <div className="particle particle-1"></div>
-                        <div className="particle particle-2"></div>
-                        <div className="particle particle-3"></div>
-                        <div className="particle particle-4"></div>
-                        <div className="particle particle-5"></div>
-                        <div className="particle particle-6"></div>
-                        <div className="particle particle-7"></div>
-                        <div className="particle particle-8"></div>
-                      </div>
-                      <div className="explosion-text">
-                        <Logo className="h-16 w-auto" href="#" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Ingredients List */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h2 className="text-2xl font-serif mb-6" style={{color: '#1B4965'}}>Our Ingredients</h2>
+              <div className="space-y-4">
+                {ingredients.map((ingredient) => (
+                  <button
+                    key={ingredient.id}
+                    onClick={() => setSelectedIngredient(ingredient)}
+                    className={`w-full text-left p-4 rounded-lg transition-all duration-300 ${
+                      selectedIngredient.id === ingredient.id 
+                        ? 'shadow-md' 
+                        : 'hover:shadow-sm'
+                    }`}
+                    style={{
+                      backgroundColor: selectedIngredient.id === ingredient.id ? '#D0E8F2' : '#F4F9F9',
+                      color: '#1B4965'
+                    }}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <img 
+                        src={ingredient.image} 
+                        alt={ingredient.name}
+                        className="w-12 h-12 object-contain rounded"
+                      />
+                      <div>
+                        <h3 className="font-medium">{ingredient.name}</h3>
                       </div>
                     </div>
-                  </div>
-                )}
-              </button>
-            </div>
-          ))}
-        </div>
-
-        {/* Text Overlay */}
-        {showText && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-            <div className="relative max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-xl bg-white dark:bg-slate-800 p-8 shadow-2xl">
-              <button
-                onClick={handleCloseText}
-                className="absolute right-4 top-4 text-2xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
-              >
-                ×
-              </button>
-              <h2 className="mb-6 text-3xl font-bold text-slate-900 dark:text-slate-100">{selectedIngredient.name}</h2>
-              <div className="prose prose-slate max-w-none text-lg leading-relaxed dark:prose-invert">
-                {selectedIngredient.description.split('\n\n').map((paragraph, index) => (
-                  <div key={index} className="mb-6">
-                    {paragraph.split('**').map((part, partIndex) => {
-                      if (partIndex % 2 === 1) {
-                        return <strong key={partIndex} className="font-bold text-slate-900 dark:text-slate-100">{part}</strong>
-                      }
-                      return <span key={partIndex}>{part}</span>
-                    })}
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
           </div>
-        )}
+
+          {/* Selected Ingredient Details */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+              <div className="p-8">
+                <div className="flex items-center space-x-4 mb-6">
+                  <img 
+                    src={selectedIngredient.image} 
+                    alt={selectedIngredient.name}
+                    className="w-20 h-20 object-contain rounded"
+                  />
+                  <div>
+                    <h2 className="text-3xl font-serif" style={{color: '#1B4965'}}>
+                      {selectedIngredient.name}
+                    </h2>
+                  </div>
+                </div>
+                
+                <div className="prose max-w-none">
+                  <div 
+                    className="text-base font-light leading-relaxed whitespace-pre-line"
+                    style={{color: '#9DB4C0'}}
+                    dangerouslySetInnerHTML={{
+                      __html: selectedIngredient.description.replace(/\*\*(.*?)\*\*/g, '<strong style="color: #1B4965;">$1</strong>')
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Benefits Section */}
+        <div className="mt-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-serif mb-4" style={{color: '#1B4965'}}>Why Natural Ingredients?</h2>
+            <p className="text-lg font-light max-w-2xl mx-auto" style={{color: '#9DB4C0'}}>
+              Our commitment to natural, plant-based ingredients ensures gentle yet effective skincare solutions.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-white rounded-lg shadow-sm p-6 text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{backgroundColor: '#D0E8F2'}}>
+                <span className="text-2xl">🌿</span>
+              </div>
+              <h3 className="text-lg font-medium mb-2" style={{color: '#1B4965'}}>100% Natural</h3>
+              <p className="text-sm font-light" style={{color: '#9DB4C0'}}>
+                Pure plant-based ingredients without harmful chemicals
+              </p>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-sm p-6 text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{backgroundColor: '#D0E8F2'}}>
+                <span className="text-2xl">✨</span>
+              </div>
+              <h3 className="text-lg font-medium mb-2" style={{color: '#1B4965'}}>Gentle & Safe</h3>
+              <p className="text-sm font-light" style={{color: '#9DB4C0'}}>
+                Suitable for all skin types, including sensitive skin
+              </p>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-sm p-6 text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{backgroundColor: '#D0E8F2'}}>
+                <span className="text-2xl">🔬</span>
+              </div>
+              <h3 className="text-lg font-medium mb-2" style={{color: '#1B4965'}}>Scientifically Proven</h3>
+              <p className="text-sm font-light" style={{color: '#9DB4C0'}}>
+                Backed by research and traditional knowledge
+              </p>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-sm p-6 text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{backgroundColor: '#D0E8F2'}}>
+                <span className="text-2xl">🌍</span>
+              </div>
+              <h3 className="text-lg font-medium mb-2" style={{color: '#1B4965'}}>Eco-Friendly</h3>
+              <p className="text-sm font-light" style={{color: '#9DB4C0'}}>
+                Sustainable sourcing and environmentally conscious
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-      
-      {/* Skyrocket Animation Styles */}
-      <style jsx>{`
-        .skyrocket-animation {
-          animation: skyrocket 0.8s ease-out;
-        }
-        
-        @keyframes skyrocket {
-          0% {
-            transform: scale(1);
-            filter: brightness(1);
-          }
-          20% {
-            transform: scale(1.05);
-            filter: brightness(1.2);
-          }
-          40% {
-            transform: scale(1.1);
-            filter: brightness(1.5);
-          }
-          60% {
-            transform: scale(1.15);
-            filter: brightness(1.8);
-          }
-          80% {
-            transform: scale(1.2);
-            filter: brightness(2);
-          }
-          100% {
-            transform: scale(1.25);
-            filter: brightness(2.5);
-          }
-        }
-        
-        .skyrocket-explosion {
-          position: relative;
-          width: 200px;
-          height: 200px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        
-        .explosion-circle {
-          position: absolute;
-          width: 100px;
-          height: 100px;
-          border-radius: 50%;
-          background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
-          animation: explosion-circle 0.8s ease-out;
-        }
-        
-        @keyframes explosion-circle {
-          0% {
-            transform: scale(0);
-            opacity: 1;
-          }
-          50% {
-            transform: scale(1.5);
-            opacity: 0.8;
-          }
-          100% {
-            transform: scale(3);
-            opacity: 0;
-          }
-        }
-        
-        .explosion-particles {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-        }
-        
-        .particle {
-          position: absolute;
-          width: 8px;
-          height: 8px;
-          background: linear-gradient(45deg, #ff6b6b, #ffd93d, #6bcf7f, #4d9de0);
-          border-radius: 50%;
-          animation: particle-explosion 0.8s ease-out;
-        }
-        
-        .particle-1 { top: 50%; left: 50%; animation-delay: 0.1s; }
-        .particle-2 { top: 30%; left: 70%; animation-delay: 0.2s; }
-        .particle-3 { top: 70%; left: 30%; animation-delay: 0.3s; }
-        .particle-4 { top: 20%; left: 50%; animation-delay: 0.4s; }
-        .particle-5 { top: 80%; left: 50%; animation-delay: 0.5s; }
-        .particle-6 { top: 50%; left: 20%; animation-delay: 0.6s; }
-        .particle-7 { top: 50%; left: 80%; animation-delay: 0.7s; }
-        .particle-8 { top: 40%; left: 40%; animation-delay: 0.8s; }
-        
-        @keyframes particle-explosion {
-          0% {
-            transform: scale(0) translate(0, 0);
-            opacity: 1;
-          }
-          50% {
-            transform: scale(1) translate(var(--random-x, 50px), var(--random-y, 50px));
-            opacity: 0.8;
-          }
-          100% {
-            transform: scale(0.5) translate(var(--random-x, 100px), var(--random-y, 100px));
-            opacity: 0;
-          }
-        }
-        
-        .particle-1 { --random-x: 60px; --random-y: -40px; }
-        .particle-2 { --random-x: 80px; --random-y: -20px; }
-        .particle-3 { --random-x: -60px; --random-y: 40px; }
-        .particle-4 { --random-x: 0px; --random-y: -60px; }
-        .particle-5 { --random-x: 0px; --random-y: 60px; }
-        .particle-6 { --random-x: -80px; --random-y: 0px; }
-        .particle-7 { --random-x: 80px; --random-y: 0px; }
-        .particle-8 { --random-x: -40px; --random-y: -40px; }
-        
-        .explosion-text {
-          animation: text-bounce 0.8s ease-out;
-          z-index: 10;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        
-        .explosion-text img {
-          filter: drop-shadow(0 0 20px rgba(255,255,255,0.8));
-          animation: logo-glow 0.8s ease-out;
-        }
-        
-        @keyframes logo-glow {
-          0% {
-            filter: drop-shadow(0 0 0px rgba(255,255,255,0));
-          }
-          50% {
-            filter: drop-shadow(0 0 30px rgba(255,255,255,1));
-          }
-          100% {
-            filter: drop-shadow(0 0 20px rgba(255,255,255,0.8));
-          }
-        }
-        
-        @keyframes text-bounce {
-          0% {
-            transform: scale(0) rotate(0deg);
-            opacity: 0;
-          }
-          30% {
-            transform: scale(1.2) rotate(180deg);
-            opacity: 1;
-          }
-          60% {
-            transform: scale(0.9) rotate(360deg);
-            opacity: 1;
-          }
-          100% {
-            transform: scale(1) rotate(360deg);
-            opacity: 1;
-          }
-        }
-      `}</style>
     </main>
   )
 }
-
-

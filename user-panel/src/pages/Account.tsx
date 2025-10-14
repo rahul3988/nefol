@@ -22,7 +22,7 @@ export default function Account() {
       }
 
       // Fetch user profile for loyalty points
-      const profileResponse = await fetch('http://localhost:4000/api/users/profile', {
+      const profileResponse = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/users/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -38,7 +38,7 @@ export default function Account() {
       }
 
       // Fetch orders for total spent calculation
-      const ordersResponse = await fetch('http://localhost:4000/api/orders', {
+      const ordersResponse = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/orders`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

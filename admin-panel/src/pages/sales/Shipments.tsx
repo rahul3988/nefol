@@ -20,7 +20,7 @@ export default function Shipments() {
   const [shipments, setShipments] = useState<Shipment[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const apiBase = (import.meta as any).env.VITE_API_URL || 'http://localhost:4000'
+  const apiBase = (import.meta as any).env.VITE_API_URL || `http://${window.location.hostname}:4000`
 
   const load = async () => {
     try {
