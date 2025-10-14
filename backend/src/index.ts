@@ -676,9 +676,8 @@ app.put('/api/products/:id', async (req, res) => {
          category = coalesce($3, category),
          price = coalesce($4, price),
          list_image = coalesce($5, list_image),
-         description = coalesce($6, description),
-         details = coalesce($7, details)
-       where id = $8 returning *`,
+         description = coalesce($6, description)
+       where id = $7 returning *`,
       [
         slug ?? null,
         title ?? null,
@@ -686,7 +685,6 @@ app.put('/api/products/:id', async (req, res) => {
         price ?? null,
         listImage ?? null,
         description ?? null,
-        details ? JSON.stringify(details) : null,
         req.params.id
       ]
     )
