@@ -660,7 +660,15 @@ app.post('/api/products', async (req, res) => {
 
 app.put('/api/products/:id', async (req, res) => {
   try {
-    const { slug, title, category, price, listImage, description, details } = req.body || {}
+    const body = req.body || {}
+    const slug = body.slug
+    const title = body.title
+    const category = body.category
+    const price = body.price
+    const listImage = body.listImage ?? body.list_image
+    const description = body.description
+    const details = body.details
+
     const { rows } = await pool.query(
       `update products set
          slug = coalesce($1, slug),
@@ -671,11 +679,21 @@ app.put('/api/products/:id', async (req, res) => {
          description = coalesce($6, description),
          details = coalesce($7, details)
        where id = $8 returning *`,
-      [slug ?? null, title ?? null, category ?? null, price ?? null, listImage ?? null, description ?? null, details ? JSON.stringify(details) : null, req.params.id]
+      [
+        slug ?? null,
+        title ?? null,
+        category ?? null,
+        price ?? null,
+        listImage ?? null,
+        description ?? null,
+        details ? JSON.stringify(details) : null,
+        req.params.id
+      ]
     )
     if (!rows[0]) return res.status(404).json({ error: 'Not found' })
     res.json(rows[0])
   } catch (err) {
+    console.error('Failed to update product:', err)
     res.status(500).json({ error: 'Failed to update product' })
   }
 })
