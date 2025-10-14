@@ -437,9 +437,9 @@ export default function Home() {
               {products.slice(0, 4).map((product, index) => (
                 <div key={product.slug} className="bg-white rounded-lg shadow-sm group">
                   <div className="relative overflow-hidden rounded-t-lg">
-                    <img 
+                  <img 
                       src={(() => {
-                        const imageUrl = (product.listImage || (product.pdpImages && product.pdpImages[0])) || "/IMAGES/ANYTIME CREAM (3).jpg"
+                        const imageUrl = (product.listImage || (product.pdpImages && product.pdpImages[0])) || heroImages[0]
                         console.log(`Home - Product "${product.title}" image URL:`, imageUrl)
                         console.log(`Home - Product listImage:`, product.listImage)
                         console.log(`Home - Product pdpImages:`, product.pdpImages)
@@ -540,122 +540,54 @@ export default function Home() {
             </p>
           </div>
 
-          
-
-          {/* Sliding certifications */}
-          <style>{`
-            @keyframes certScroll {
-              0% { transform: translateX(-50%); }
-              100% { transform: translateX(0); }
-            }
-          `}</style>
-
-          {/* Full-width white band behind the sliding items */}
-          <div className="relative overflow-hidden py-6" style={{ backgroundColor: '#ffffff' }}>
-            <div
-              className="flex items-center gap-16 w-[200%]"
-              style={{ animation: 'certScroll 40s linear infinite' }}
-            >
-              <div className="flex items-center gap-16 w-1/2 justify-around">
-                <div className="text-center">
-                  <div className="w-48 h-36 mx-auto mb-4 flex items-center justify-center">
-                    <img 
-                      src="/IMAGES/cruelity free.png" 
-                      alt="Cruelty-Free"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="w-48 h-36 mx-auto mb-4 flex items-center justify-center">
-                    <img 
-                      src="/IMAGES/paraben free.png" 
-                      alt="Paraben-Free"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="w-48 h-36 mx-auto mb-4 flex items-center justify-center">
-                    <img 
-                      src="/IMAGES/sulphate free.png" 
-                      alt="Sulphate-Free"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="w-48 h-36 mx-auto mb-4 flex items-center justify-center">
-                    <img 
-                      src="/IMAGES/made safe.png" 
-                      alt="Made Safe"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="w-48 h-36 mx-auto mb-4 flex items-center justify-center">
-                    <img 
-                      src="/IMAGES/Made in India.jpg" 
-                      alt="Made in India"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                  <h3 className="text-lg font-bold tracking-wide underline" style={{ color: '#1B4965' }}>Made in India</h3>
-                </div>
+          {/* Static certifications grid */}
+          <div className="flex flex-wrap justify-center items-center gap-8">
+            <div className="text-center">
+              <div className="w-48 h-36 mx-auto mb-4 flex items-center justify-center">
+                <img 
+                  src="/IMAGES/cruielty.jpg" 
+                  alt="Cruelty-Free"
+                  className="w-full h-full object-contain"
+                />
               </div>
-              <div className="flex items-center gap-16 w-1/2 justify-around">
-                <div className="text-center">
-                  <div className="w-48 h-36 mx-auto mb-4 flex items-center justify-center">
-                    <img 
-                      src="/IMAGES/cruelity free.png" 
-                      alt="Cruelty-Free"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="w-48 h-36 mx-auto mb-4 flex items-center justify-center">
-                    <img 
-                      src="/IMAGES/paraben free.png" 
-                      alt="Paraben-Free"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="w-48 h-36 mx-auto mb-4 flex items-center justify-center">
-                    <img 
-                      src="/IMAGES/sulphate free.png" 
-                      alt="Sulphate-Free"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="w-48 h-36 mx-auto mb-4 flex items-center justify-center">
-                    <img 
-                      src="/IMAGES/made safe.png" 
-                      alt="Made Safe"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="w-48 h-36 mx-auto mb-4 flex items-center justify-center">
-                    <img 
-                      src="/IMAGES/Made in India.jpg" 
-                      alt="Made in India"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                  <h3 className="text-lg font-bold tracking-wide underline" style={{ color: '#1B4965' }}>Made in India</h3>
-                </div>
+            </div>
+            <div className="text-center">
+              <div className="w-48 h-36 mx-auto mb-4 flex items-center justify-center">
+                <img 
+                  src="/IMAGES/paraben.jpg" 
+                  alt="Paraben-Free"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="w-48 h-36 mx-auto mb-4 flex items-center justify-center">
+                <img 
+                  src="/IMAGES/india.jpg" 
+                  alt="Made in India"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="w-48 h-36 mx-auto mb-4 flex items-center justify-center">
+                <img 
+                  src="/IMAGES/chemical.jpg" 
+                  alt="Chemical-Free"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="w-48 h-36 mx-auto mb-4 flex items-center justify-center">
+                <img 
+                  src="/IMAGES/vegan.jpg" 
+                  alt="Vegan"
+                  className="w-full h-full object-contain"
+                />
               </div>
             </div>
           </div>
-
-          
         </div>
       </section>
 
@@ -665,7 +597,7 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="relative">
               <img 
-                src="/IMAGES/ANYTIME CREAM (3).jpg" 
+                src={(products[0]?.listImage || products[0]?.pdpImages?.[0] || heroImages[heroIndex])}
                 alt="Nefol Collection"
                 className="w-full h-96 object-cover rounded-lg shadow-2xl"
               />
@@ -873,7 +805,7 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="relative group cursor-pointer">
               <img 
-                src="/IMAGES/ANYTIME CREAM (3).jpg" 
+                src={(products[0]?.listImage || products[0]?.pdpImages?.[0] || heroImages[0])}
                 alt="Luxury Skincare"
                 className="w-full h-80 object-cover rounded-lg shadow-lg transition-transform duration-500 group-hover:scale-105"
               />
@@ -890,7 +822,7 @@ export default function Home() {
             </div>
             <div className="relative group cursor-pointer">
               <img 
-                src="/IMAGES/ANYTIME CREAM (3).jpg" 
+                src={(products[1]?.listImage || products[1]?.pdpImages?.[0] || heroImages[0])}
                 alt="Natural Beauty"
                 className="w-full h-80 object-cover rounded-lg shadow-lg transition-transform duration-500 group-hover:scale-105"
               />
