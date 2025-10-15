@@ -1,28 +1,11 @@
 import React, { useState } from 'react'
 import SplashScreen from './components/SplashScreen'
 import Logo from './components/Logo'
-import ProfileAvatar from './components/ProfileAvatar'
-import { useCart, CartProvider } from './contexts/CartContext'
+import ThemeToggle from './components/ThemeToggle'
+import CartIcon from './components/CartIcon'
+import { useCart } from './contexts/CartContext'
+import { useTheme, ThemeProvider } from './contexts/ThemeContext'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
-
-// Extend User type to include profile_photo
-interface ExtendedUser {
-  id: number
-  name: string
-  email: string
-  phone: string
-  address: {
-    street: string
-    city: string
-    state: string
-    zip: string
-  }
-  profile_photo?: string
-  loyalty_points: number
-  total_orders: number
-  member_since: string
-  is_verified: boolean
-}
 import LoginPage from './pages/Login'
 import Profile from './pages/Profile'
 import AboutUs from './pages/AboutUs'
@@ -45,72 +28,35 @@ import PrivacySecurity from './pages/PrivacySecurity'
 import PaymentMethods from './pages/PaymentMethods'
 import LoyaltyRewards from './pages/LoyaltyRewards'
 import Combos from './pages/Combos'
-import Cart from './pages/Cart'
-import Search from './pages/Search'
 
 function AppContent() {
+  const { theme } = useTheme()
   const { items: cartItems } = useCart()
-  const { user, isAuthenticated, logout, refreshUser } = useAuth()
+  const { user, isAuthenticated, logout } = useAuth()
   const [showSplash, setShowSplash] = useState(true)
   const [showSearch, setShowSearch] = useState(false)
+  const [showCart, setShowCart] = useState(false)
   const [showWishlist, setShowWishlist] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [wishlistItems, setWishlistItems] = useState<any[]>([])
 
+  // Debug theme
+  console.log('Current theme:', theme)
+  console.log('Document classes:', document.documentElement.className)
+
   const handleSplashComplete = () => {
     setShowSplash(false)
   }
 
-  // Handle ESC key to close modals
-  React.useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        closeAllModals()
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [])
-
-  // Refresh user data when component mounts
-  React.useEffect(() => {
-    if (isAuthenticated) {
-      refreshUser()
-    }
-  }, [isAuthenticated, refreshUser])
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (searchQuery.trim()) {
-      // Redirect to dedicated search page with query parameter
-      window.location.hash = `#/search?q=${encodeURIComponent(searchQuery.trim())}`
+      // Here you would typically implement search functionality
+      console.log('Searching for:', searchQuery)
+      alert(`Searching for: ${searchQuery}`)
       setSearchQuery('')
       setShowSearch(false)
-    }
-  }
-
-  // Function to close all modals
-  const closeAllModals = () => {
-    setShowSearch(false)
-    setShowWishlist(false)
-    setShowProfile(false)
-  }
-
-  // Function to open specific modal and close others
-  const openModal = (modalType: 'search' | 'wishlist' | 'profile') => {
-    closeAllModals()
-    switch (modalType) {
-      case 'search':
-        setShowSearch(true)
-        break
-      case 'wishlist':
-        setShowWishlist(true)
-        break
-      case 'profile':
-        setShowProfile(true)
-        break
     }
   }
 
@@ -125,12 +71,22 @@ function AppContent() {
     alert(`${product.name} added to wishlist!`)
   }
 
+  const removeFromCart = (index: number) => {
+    // This function is kept for compatibility with existing components
+    // The actual cart functionality is now handled by the CartContext
+    console.log('Remove from cart:', index)
+  }
+
   const removeFromWishlist = (index: number) => {
     setWishlistItems(prev => prev.filter((_, i) => i !== index))
   }
 
   return (
-    <div className={`min-h-screen bg-white text-slate-900 ${showSplash ? 'overflow-hidden h-screen' : ''}`}>
+    <div className={`min-h-screen bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100 ${showSplash ? 'overflow-hidden h-screen' : ''}`}>
+      {/* Debug theme indicator */}
+      <div className="fixed top-20 right-4 z-50 bg-red-500 text-white px-2 py-1 text-xs rounded">
+        Theme: {theme}
+      </div>
       {showSplash ? (
         <SplashScreen onComplete={handleSplashComplete} />
       ) : (
@@ -180,38 +136,27 @@ function AppContent() {
               </nav>
               
               <div className="flex items-center gap-4">
+                <ThemeToggle />
+                
                 <button 
-                  onClick={() => openModal('search')}
+                  onClick={() => setShowSearch(true)}
                   className="neu w-12 h-12 flex items-center justify-center hover:scale-110 transition-all duration-300" 
                   aria-label="Search"
                 >
                   <span className="text-lg">🔍</span>
                 </button>
                 
-                <a 
-                  href="#/cart"
-                  className="neu w-12 h-12 flex items-center justify-center hover:scale-110 transition-all duration-300 relative" 
-                  aria-label="Shopping Cart"
-                >
-                  <span className="text-lg">🛒</span>
-                  {cartItems.length > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
-                      {cartItems.length}
-                    </span>
-                  )}
-                </a>
+                <CartIcon 
+                  onClick={() => setShowCart(true)}
+                  className="neu w-12 h-12 hover:scale-110 transition-all duration-300"
+                />
                 
                 <button 
-                  onClick={() => openModal('profile')}
-                  className="neu w-12 h-12 flex items-center justify-center hover:scale-110 transition-all duration-300 overflow-hidden rounded-full" 
+                  onClick={() => setShowProfile(true)}
+                  className="neu w-12 h-12 flex items-center justify-center hover:scale-110 transition-all duration-300" 
                   aria-label="Account"
                 >
-                  <ProfileAvatar 
-                    profilePhoto={(user as ExtendedUser)?.profile_photo}
-                    name={(user as ExtendedUser)?.name}
-                    size="md"
-                    className="w-full h-full"
-                  />
+                  <span className="text-lg">👤</span>
                 </button>
                 
                 <button className="neu w-12 h-12 flex items-center justify-center hover:scale-110 transition-all duration-300 md:hidden" aria-label="Menu">
@@ -281,18 +226,12 @@ function AppContent() {
 
       {/* Search Modal */}
       {showSearch && (
-        <div 
-          className="fixed inset-0 z-50 flex items-start justify-center bg-black/50 p-4 pt-20"
-          onClick={closeAllModals}
-        >
-          <div 
-            className="w-full max-w-2xl rounded-xl bg-white dark:bg-slate-800 p-6 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/50 p-4 pt-20">
+          <div className="w-full max-w-2xl rounded-xl bg-white dark:bg-slate-800 p-6 shadow-2xl">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-2xl font-bold dark:text-slate-100">Search Products</h2>
               <button
-                onClick={closeAllModals}
+                onClick={() => setShowSearch(false)}
                 className="text-2xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
               >
                 ×
@@ -323,20 +262,69 @@ function AppContent() {
         </div>
       )}
 
+      {/* Cart Modal */}
+      {showCart && (
+        <div className="fixed inset-0 z-50 flex items-end justify-end bg-black/50 p-4">
+          <div className="w-full max-w-md rounded-xl bg-white dark:bg-slate-800 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 p-6">
+              <h2 className="text-xl font-bold dark:text-slate-100">Shopping Cart ({cartItems.length})</h2>
+              <button
+                onClick={() => setShowCart(false)}
+                className="text-2xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+              >
+                ×
+              </button>
+            </div>
+            <div className="max-h-96 overflow-y-auto p-6">
+              {cartItems.length === 0 ? (
+                <div className="text-center text-slate-500 py-8">
+                  <div className="text-4xl mb-2">🛒</div>
+                  <p>Your cart is empty</p>
+                  <p className="text-sm">Add some products to get started!</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {cartItems.map((item: any, index: number) => (
+                    <div key={index} className="flex items-center space-x-4 rounded-lg border border-slate-200 p-4">
+                      <img src={item.image || '/IMAGES/FACE SERUM (5).jpg'} alt={item.name} className="h-16 w-16 rounded-lg object-cover" />
+                      <div className="flex-1">
+                        <h3 className="font-semibold">{item.name}</h3>
+                        <p className="text-sm text-slate-600">₹{item.price || '999'}</p>
+                      </div>
+                      <button
+                        onClick={() => removeFromCart(index)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        🗑️
+            </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            {cartItems.length > 0 && (
+              <div className="border-t border-slate-200 p-6">
+                <div className="mb-4 flex justify-between text-lg font-semibold">
+                  <span>Total:</span>
+                  <span>₹{cartItems.reduce((sum: number, item: any) => sum + (item.price || 999), 0)}</span>
+                </div>
+                <a href="#/checkout" className="block w-full rounded-lg bg-blue-600 py-3 text-center font-semibold text-white hover:bg-blue-700 transition-colors">
+                  Proceed to Checkout
+                </a>
+          </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Wishlist Modal */}
       {showWishlist && (
-        <div 
-          className="fixed inset-0 z-50 flex items-end justify-end bg-black/50 p-4"
-          onClick={closeAllModals}
-        >
-          <div 
-            className="w-full max-w-md rounded-xl bg-white shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="fixed inset-0 z-50 flex items-end justify-end bg-black/50 p-4">
+          <div className="w-full max-w-md rounded-xl bg-white shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-200 p-6">
               <h2 className="text-xl font-bold">Wishlist ({wishlistItems.length})</h2>
               <button
-                onClick={closeAllModals}
+                onClick={() => setShowWishlist(false)}
                 className="text-2xl text-slate-400 hover:text-slate-600"
               >
                 ×
@@ -386,18 +374,12 @@ function AppContent() {
 
       {/* Profile Modal */}
       {showProfile && (
-        <div 
-          className="fixed inset-0 z-50 flex items-end justify-end bg-black/50 p-4"
-          onClick={closeAllModals}
-        >
-          <div 
-            className="w-full max-w-md rounded-xl bg-white shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="fixed inset-0 z-50 flex items-end justify-end bg-black/50 p-4">
+          <div className="w-full max-w-md rounded-xl bg-white shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-200 p-6">
               <h2 className="text-xl font-bold">My Account</h2>
               <button
-                onClick={closeAllModals}
+                onClick={() => setShowProfile(false)}
                 className="text-2xl text-slate-400 hover:text-slate-600"
               >
                 ×
@@ -407,12 +389,9 @@ function AppContent() {
               {isAuthenticated ? (
                 <>
                   <div className="text-center mb-6">
-                    <ProfileAvatar 
-                      profilePhoto={(user as ExtendedUser)?.profile_photo}
-                      name={(user as ExtendedUser)?.name}
-                      size="xl"
-                      className="mx-auto mb-4"
-                    />
+                    <div className="mx-auto mb-4 h-20 w-20 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center text-2xl">
+                      👤
+                    </div>
                     <h3 className="text-lg font-semibold dark:text-slate-100">Welcome back!</h3>
                     <p className="text-slate-600 dark:text-slate-400">{user?.name}</p>
                     <p className="text-sm text-slate-500 dark:text-slate-500">{user?.email}</p>
@@ -421,19 +400,24 @@ function AppContent() {
                     <a 
                       href="#/profile" 
                       className="block w-full rounded-lg border border-slate-300 dark:border-slate-600 py-3 font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-center"
-                      onClick={closeAllModals}
+                      onClick={() => setShowProfile(false)}
                     >
                       My Profile
                     </a>
-                    <a 
-                      href="#/cart"
+                    <button 
+                      onClick={() => {
+                        setShowCart(true)
+                        setShowProfile(false)
+                      }}
                       className="block w-full rounded-lg border border-slate-300 dark:border-slate-600 py-3 font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-center relative"
-                      onClick={closeAllModals}
                     >
                       🛒 Cart ({cartItems.length})
-                    </a>
+                    </button>
                     <button 
-                      onClick={() => openModal('wishlist')}
+                      onClick={() => {
+                        setShowWishlist(true)
+                        setShowProfile(false)
+                      }}
                       className="block w-full rounded-lg border border-slate-300 dark:border-slate-600 py-3 font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-center relative"
                     >
                       ❤️ Wishlist ({wishlistItems.length})
@@ -441,14 +425,14 @@ function AppContent() {
                     <a 
                       href="#/affiliate" 
                       className="block w-full rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700 transition-colors text-center"
-                      onClick={closeAllModals}
+                      onClick={() => setShowProfile(false)}
                     >
                       Affiliate Program
                     </a>
                     <button
                       onClick={() => {
                         logout()
-                        closeAllModals()
+                        setShowProfile(false)
                       }}
                       className="w-full rounded-lg border border-red-300 dark:border-red-600 py-3 font-semibold text-red-700 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                     >
@@ -469,14 +453,14 @@ function AppContent() {
                     <a 
                       href="#/login" 
                       className="block w-full rounded-lg border border-slate-300 dark:border-slate-600 py-3 font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-center"
-                      onClick={closeAllModals}
+                      onClick={() => setShowProfile(false)}
                     >
                       Sign In
                     </a>
                     <a 
                       href="#/login" 
                       className="block w-full rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700 transition-colors text-center"
-                      onClick={closeAllModals}
+                      onClick={() => setShowProfile(false)}
                     >
                       Create Account
                     </a>
@@ -525,7 +509,6 @@ function RouterView({ addToCart, addToWishlist }: RouterViewProps) {
   const lower = path.toLowerCase()
   if (lower.startsWith('/product/')) return <ProductPage />
   if (lower.startsWith('/category/')) return <CategoryPage />
-  if (lower.startsWith('/search')) return <Search addToWishlist={addToWishlist} />
   switch (lower) {
     case '/product':
     case '/':
@@ -538,7 +521,6 @@ function RouterView({ addToCart, addToWishlist }: RouterViewProps) {
     case '/checkout': return <Checkout />
     case '/confirmation': return <Confirmation />
     case '/affiliate': return <Affiliate />
-    case '/cart': return <Cart />
     case '/profile': return <Profile />
     case '/login': return <LoginPage />
     case '/about': return <AboutUs />
@@ -568,11 +550,11 @@ function RouterView({ addToCart, addToWishlist }: RouterViewProps) {
 
 export default function App() {
   return (
-    <CartProvider>
+    <ThemeProvider>
       <AuthProvider>
         <AppContent />
       </AuthProvider>
-    </CartProvider>
+    </ThemeProvider>
   )
 }
 
