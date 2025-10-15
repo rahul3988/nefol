@@ -15,7 +15,7 @@ const paymentMethods = [
 ]
 
 export default function Checkout() {
-  const { items, subtotal, clear } = useCart()
+  const { items, subtotal, tax, total, clear } = useCart()
   const { user, isAuthenticated } = useAuth()
   const [buySlug, setBuySlug] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -119,11 +119,26 @@ export default function Checkout() {
   }
 
   const shipping = 0
-  const tax = 0
-  const total = calcSubtotal + shipping + tax
+  
+  // Calculate tax based on categories
+  const calculateTax = () => {
+    if (buySlug) {
+      // For single item checkout
+      const item = orderItems[0]
+      if (!item) return 0
+      const itemSubtotal = parsePrice(item.price) * (item.quantity || 1)
+      const category = (item.category || '').toLowerCase()
+      const taxRate = category.includes('hair') ? 0.05 : 0.18
+      return itemSubtotal * taxRate
+    }
+    return tax
+  }
+  
+  const calculatedTax = calculateTax()
+  const finalTotal = buySlug ? calcSubtotal + shipping + calculatedTax : total
 
   // Payment rules: <1000 prepaid/postpaid, >1000 prepaid only
-  const canUsePostpaid = total < 1000
+  const canUsePostpaid = finalTotal < 1000
   const isCOD = selectedPayment === 'cod'
 
   useEffect(() => {
@@ -288,8 +303,8 @@ export default function Checkout() {
             className="w-full rounded bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
           >
             {loading ? 'Processing Order...' : 
-             isCOD ? `Place Order (COD) - ₹${total.toFixed(2)}` : 
-             `Pay ₹${total.toFixed(2)} with ${paymentMethods.find(m => m.id === selectedPayment)?.name}`}
+             isCOD ? `Place Order (COD) - ₹${finalTotal.toFixed(2)}` : 
+             `Pay ₹${finalTotal.toFixed(2)} with ${paymentMethods.find(m => m.id === selectedPayment)?.name}`}
           </button>
         </form>
         <aside>
@@ -304,8 +319,8 @@ export default function Checkout() {
             <div className="border-t border-slate-200 dark:border-slate-700 pt-3 text-sm space-y-1">
               <div className="flex justify-between"><span className="text-slate-600 dark:text-slate-400">Subtotal</span><span className="dark:text-slate-100">₹{calcSubtotal.toFixed(2)}</span></div>
               <div className="flex justify-between"><span className="text-slate-600 dark:text-slate-400">Shipping</span><span className="dark:text-slate-100">₹{shipping.toFixed(2)}</span></div>
-              <div className="flex justify-between"><span className="text-slate-600 dark:text-slate-400">Tax</span><span className="dark:text-slate-100">₹{tax.toFixed(2)}</span></div>
-              <div className="flex justify-between font-semibold"><span className="dark:text-slate-100">Total</span><span className="dark:text-slate-100">₹{total.toFixed(2)}</span></div>
+              <div className="flex justify-between"><span className="text-slate-600 dark:text-slate-400">GST ({buySlug ? (orderItems[0]?.category?.toLowerCase().includes('hair') ? '5%' : '18%') : 'Mixed'})</span><span className="dark:text-slate-100">₹{calculatedTax.toFixed(2)}</span></div>
+              <div className="flex justify-between font-semibold"><span className="dark:text-slate-100">Total</span><span className="dark:text-slate-100">₹{finalTotal.toFixed(2)}</span></div>
             </div>
           </div>
         </aside>

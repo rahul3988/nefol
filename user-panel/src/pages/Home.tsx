@@ -167,6 +167,20 @@ export default function Home() {
     )
   }
 
+  // Helper function to create simplified product data from CSV for listings
+  const getSimplifiedProductData = (csvProduct: any) => {
+    return {
+      slug: csvProduct['Product Name']?.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || '',
+      title: csvProduct['Product Name'] || '',
+      brand: csvProduct['Brand Name'] || 'NEFOL',
+      mrp: csvProduct['MRP '] || csvProduct['MRP'] || '',
+      websitePrice: csvProduct['website price'] || '',
+      category: csvProduct['Product Name']?.includes('Hair') ? 'Hair Care' : 
+                csvProduct['Product Name']?.includes('Face') ? 'Face Care' : 
+                csvProduct['Product Name']?.includes('Body') ? 'Body Care' : 'Skincare'
+    }
+  }
+
   // Functional handlers for buttons and CTAs
   const handleExploreCollection = () => {
     window.location.hash = '#/shop'
@@ -278,7 +292,7 @@ export default function Home() {
   }, [videos])
 
   return (
-    <main className="min-h-screen" style={{backgroundColor: '#F4F9F9'}}>
+    <main className="min-h-screen overflow-x-hidden" style={{backgroundColor: '#F4F9F9'}}>
       {/* Hero Banner Section - Enhanced Colors */}
       <section className="relative py-20" style={{background: 'linear-gradient(135deg, #4B97C9 0%, #D0E8F2 50%, #9DB4C0 100%)'}}>
         <div className="mx-auto max-w-7xl px-4">
@@ -325,14 +339,12 @@ export default function Home() {
               SHOP BY CATEGORY
             </h2>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
             {/* Body */}
             <div className="text-center group cursor-pointer" onClick={() => window.location.hash = '#/body'}>
               <div
-                className="mx-auto mb-4 flex items-center justify-center"
+                className="mx-auto mb-4 flex items-center justify-center w-full max-w-[280px] md:max-w-[360px] aspect-square"
                 style={{
-                  width: '360px',
-                  height: '360px',
                   WebkitMaskImage: 'radial-gradient(circle at center, rgba(0,0,0,1) 62%, rgba(0,0,0,0) 100%)',
                   maskImage: 'radial-gradient(circle at center, rgba(0,0,0,1) 62%, rgba(0,0,0,0) 100%)'
                 }}
@@ -350,10 +362,8 @@ export default function Home() {
             {/* Face */}
             <div className="text-center group cursor-pointer" onClick={() => window.location.hash = '#/face'}>
               <div
-                className="mx-auto mb-4 flex items-center justify-center"
+                className="mx-auto mb-4 flex items-center justify-center w-full max-w-[280px] md:max-w-[360px] aspect-square"
                 style={{
-                  width: '360px',
-                  height: '360px',
                   WebkitMaskImage: 'radial-gradient(circle at center, rgba(0,0,0,1) 62%, rgba(0,0,0,0) 100%)',
                   maskImage: 'radial-gradient(circle at center, rgba(0,0,0,1) 62%, rgba(0,0,0,0) 100%)'
                 }}
@@ -371,10 +381,8 @@ export default function Home() {
             {/* Hair */}
             <div className="text-center group cursor-pointer" onClick={() => window.location.hash = '#/hair'}>
               <div
-                className="mx-auto mb-4 flex items-center justify-center"
+                className="mx-auto mb-4 flex items-center justify-center w-full max-w-[280px] md:max-w-[360px] aspect-square"
                 style={{
-                  width: '360px',
-                  height: '360px',
                   WebkitMaskImage: 'radial-gradient(circle at center, rgba(0,0,0,1) 62%, rgba(0,0,0,0) 100%)',
                   maskImage: 'radial-gradient(circle at center, rgba(0,0,0,1) 62%, rgba(0,0,0,0) 100%)'
                 }}
@@ -392,10 +400,8 @@ export default function Home() {
             {/* Combos */}
             <div className="text-center group cursor-pointer" onClick={() => window.location.hash = '#/combos'}>
               <div
-                className="mx-auto mb-4 flex items-center justify-center"
+                className="mx-auto mb-4 flex items-center justify-center w-full max-w-[280px] md:max-w-[360px] aspect-square"
                 style={{
-                  width: '360px',
-                  height: '360px',
                   WebkitMaskImage: 'radial-gradient(circle at center, rgba(0,0,0,1) 62%, rgba(0,0,0,0) 100%)',
                   maskImage: 'radial-gradient(circle at center, rgba(0,0,0,1) 62%, rgba(0,0,0,0) 100%)'
                 }}
@@ -469,96 +475,73 @@ export default function Home() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {getCurrentShopProducts().map((product, index) => (
-                <div key={product.slug} className="bg-white rounded-lg shadow-sm group">
-                  <div className="relative overflow-hidden rounded-t-lg">
-                  <img 
-                      src={(() => {
-                        const imageUrl = (product.listImage || (product.pdpImages && product.pdpImages[0])) || heroImages[0]
-                        console.log(`Home - Product "${product.title}" image URL:`, imageUrl)
-                        console.log(`Home - Product listImage:`, product.listImage)
-                        console.log(`Home - Product pdpImages:`, product.pdpImages)
-                        return imageUrl
-                      })()} 
-                      alt={product.title}
-                      className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <button 
-                        onClick={() => handleAddToWishlist(product)}
-                        className="w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg"
-                      >
-                        <Heart className="w-5 h-5" style={{color: '#1B4965'}} />
-                      </button>
-                    </div>
-                    <div className="absolute top-4 left-4">
-                      <span className="text-white px-3 py-1 text-xs font-medium tracking-wide uppercase rounded-full" style={{backgroundColor: '#4B97C9'}}>
-                        {product.category}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-lg font-medium tracking-wide mb-2" style={{color: '#1B4965'}}>
-                      {product.title}
-                    </h3>
-                    <div className="flex items-center mb-2">
-                      <div className="flex text-yellow-400">
-                        <Star className="w-4 h-4 fill-current" />
-                        <Star className="w-4 h-4 fill-current" />
-                        <Star className="w-4 h-4 fill-current" />
-                        <Star className="w-4 h-4 fill-current" />
-                        <Star className="w-4 h-4 fill-current" />
+              {products.slice(0, 6).map((product, index) => {
+                return (
+                  <div key={product.slug} className="bg-white rounded-lg shadow-sm group">
+                    <div className="relative overflow-hidden rounded-t-lg">
+                      <img 
+                        src={product.list_image || '/IMAGES/placeholder.jpg'} 
+                        alt={product.title}
+                        className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <button 
+                          onClick={() => handleAddToWishlist(product)}
+                          className="w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg"
+                        >
+                          <Heart className="w-5 h-5" style={{color: '#1B4965'}} />
+                        </button>
                       </div>
-                      <span className="text-sm ml-2" style={{color: '#9DB4C0'}}>4.5 (45 Reviews)</span>
+                      <div className="absolute top-4 left-4">
+                        <span className="text-white px-3 py-1 text-xs font-medium tracking-wide uppercase rounded-full" style={{backgroundColor: '#4B97C9'}}>
+                          {product.category || 'NEFOL'}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between pt-2">
-                      {(() => {
-                        const csvData = getCsvProductData(product)
-                        const mrp = csvData?.['MRP (₹)'] || csvData?.['MRP'] || product.price || '₹599'
-                        const websitePrice = csvData?.['website price'] || csvData?.['Website Price'] || ''
-                        
-                        return (
-                          <div className="flex flex-col w-full">
-                            <div className="flex items-center gap-2 mb-2">
-                              {websitePrice && websitePrice !== mrp ? (
-                                <>
-                                  <span className="text-lg font-medium line-through opacity-60" style={{color: '#9DB4C0'}}>
-                                    {mrp}
-                                  </span>
-                                  <span className="text-lg font-bold" style={{color: '#1B4965'}}>
-                                    {websitePrice}
-                                  </span>
-                                </>
-                              ) : (
-                                <span className="text-lg font-medium" style={{color: '#1B4965'}}>
-                                  {mrp}
-                                </span>
-                              )}
-                            </div>
-                            <div className="flex gap-2">
-                              <button 
-                                onClick={() => handleAddToCart(product)}
-                                className="flex-1 px-3 py-2 text-white text-xs font-medium transition-all duration-300 tracking-wide uppercase rounded shadow-lg"
-                                style={{backgroundColor: '#4B97C9'}}
-                              >
-                                ADD TO CART
-                              </button>
-                              <button 
-                                onClick={() => handleBuyNow(product)}
-                                className="flex-1 px-3 py-2 text-white text-xs font-medium transition-all duration-300 tracking-wide uppercase rounded shadow-lg"
-                                style={{backgroundColor: '#1B4965'}}
-                              >
-                                BUY NOW
-                              </button>
-                            </div>
+                    <div className="p-6">
+                      <h3 className="text-lg font-medium tracking-wide mb-2" style={{color: '#1B4965'}}>
+                        {product.title}
+                      </h3>
+                      <div className="flex items-center mb-2">
+                        <div className="flex text-yellow-400">
+                          <Star className="w-4 h-4 fill-current" />
+                          <Star className="w-4 h-4 fill-current" />
+                          <Star className="w-4 h-4 fill-current" />
+                          <Star className="w-4 h-4 fill-current" />
+                          <Star className="w-4 h-4 fill-current" />
+                        </div>
+                        <span className="text-sm ml-2" style={{color: '#9DB4C0'}}>4.5 (45 Reviews)</span>
+                      </div>
+                      <div className="flex items-center justify-between pt-2">
+                        <div className="flex flex-col w-full">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-lg font-medium" style={{color: '#1B4965'}}>
+                              ₹{product.price}
+                            </span>
                           </div>
-                        )
-                      })()}
+                          <div className="flex gap-2">
+                            <button 
+                              onClick={() => handleAddToCart(product)}
+                              className="flex-1 px-3 py-2 text-white text-xs font-medium transition-all duration-300 tracking-wide uppercase rounded shadow-lg"
+                              style={{backgroundColor: '#4B97C9'}}
+                            >
+                              ADD TO CART
+                            </button>
+                            <button 
+                              onClick={() => handleBuyNow(product)}
+                              className="flex-1 px-3 py-2 text-white text-xs font-medium transition-all duration-300 tracking-wide uppercase rounded shadow-lg"
+                              style={{backgroundColor: '#1B4965'}}
+                            >
+                              BUY NOW
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-            ))}
-          </div>
+                )
+              })}
+            </div>
           )}
         </div>
       </section>
@@ -614,7 +597,7 @@ export default function Home() {
               </div>
             </div>
             <div className="text-center">
-              <div className="w-48 h-36 mx-auto mb-4 flex items-center justify-center">
+              <div className="w-full max-w-48 h-36 mx-auto mb-4 flex items-center justify-center">
                 <img 
                   src="/IMAGES/vegan.jpg" 
                   alt="Vegan"
@@ -784,25 +767,25 @@ export default function Home() {
                 <button
                   aria-label="Prev"
                   onClick={() => scrollByViewport(-1)}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow px-3 py-2 rounded"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-lg hover:shadow-xl px-4 py-3 rounded-full transition-all duration-200"
                 >
                   &lt;
                 </button>
 
                 <div
                   id="video-scroller"
-                  className="flex overflow-x-hidden snap-x snap-mandatory"
+                  className="flex overflow-x-hidden snap-x snap-mandatory px-4 py-4"
                   style={{ scrollBehavior: 'smooth' }}
                 >
                   {doubled.map((src, idx) => (
                     <div
                       key={idx}
-                      className="video-item snap-start shrink-0 bg-white overflow-hidden"
-                      style={{ width: '20%', transformOrigin: 'center center', transition: 'transform 200ms ease' }}
+                      className="video-item snap-start shrink-0 bg-white overflow-hidden mx-2 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+                      style={{ width: 'calc(20% - 16px)', transformOrigin: 'center center', transition: 'transform 200ms ease' }}
                     >
                       <video
                         src={src}
-                        className="block w-full h-auto"
+                        className="block w-full h-auto rounded-2xl hover:scale-105 transition-transform duration-300"
                         autoPlay
                         loop
                         muted
@@ -813,13 +796,13 @@ export default function Home() {
                   ))}
                 </div>
 
-                        <button 
+                <button 
                   aria-label="Next"
                   onClick={() => scrollByViewport(1)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow px-3 py-2 rounded"
-                        >
+                  className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-lg hover:shadow-xl px-4 py-3 rounded-full transition-all duration-200"
+                >
                   &gt;
-                        </button>
+                </button>
                 </div>
               )
           })()}

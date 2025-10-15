@@ -3,6 +3,138 @@ import * as XLSX from 'xlsx'
 import { parseCSV, slugify } from '../../utils/csv'
 import { uploadFile } from '../../utils/upload'
 
+// Subscription Modal Component
+function SubscriptionModal() {
+  const [isVisible, setIsVisible] = useState(false)
+  const [isAnimating, setIsAnimating] = useState(false)
+
+  useEffect(() => {
+    // Check if user has previously closed the modal
+    const hasClosedModal = localStorage.getItem('subscription-modal-closed')
+    
+    if (!hasClosedModal) {
+      // Show modal after a short delay for better UX
+      const timer = setTimeout(() => {
+        setIsVisible(true)
+        setIsAnimating(true)
+      }, 1000)
+      
+      return () => clearTimeout(timer)
+    }
+  }, [])
+
+  const handleClose = () => {
+    setIsAnimating(false)
+    // Store in localStorage that user closed the modal
+    localStorage.setItem('subscription-modal-closed', 'true')
+    
+    // Hide modal after animation completes
+    setTimeout(() => {
+      setIsVisible(false)
+    }, 300)
+  }
+
+  if (!isVisible) return null
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-start">
+      {/* Backdrop */}
+      <div 
+        className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ${
+          isAnimating ? 'opacity-100' : 'opacity-0'
+        }`}
+        onClick={handleClose}
+      />
+      
+      {/* Modal */}
+      <div 
+        className={`relative bg-white shadow-2xl transition-transform duration-300 ease-out h-full w-96 max-w-sm ${
+          isAnimating ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        {/* Close Button */}
+        <button
+          onClick={handleClose}
+          className="absolute top-4 right-4 z-10 rounded-full bg-gray-100 p-2 text-gray-600 hover:bg-gray-200 transition-colors"
+        >
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        {/* Modal Content */}
+        <div className="flex h-full flex-col">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
+            <h2 className="text-2xl font-bold">Upgrade Your Plan</h2>
+            <p className="mt-2 text-blue-100">Unlock premium features and boost your productivity</p>
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 p-6">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100">
+                  <svg className="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-gray-700">Unlimited product uploads</span>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100">
+                  <svg className="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-gray-700">Advanced analytics dashboard</span>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100">
+                  <svg className="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-gray-700">Priority customer support</span>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100">
+                  <svg className="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-gray-700">Custom integrations</span>
+              </div>
+            </div>
+
+            {/* Pricing */}
+            <div className="mt-8 rounded-lg bg-gray-50 p-4">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-gray-900">$29</div>
+                <div className="text-sm text-gray-600">per month</div>
+                <div className="mt-2 text-xs text-gray-500">Cancel anytime</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="border-t border-gray-200 p-6">
+            <button className="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700 transition-colors">
+              Start Free Trial
+            </button>
+            <p className="mt-2 text-center text-xs text-gray-500">
+              14-day free trial • No credit card required
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 type Product = {
   id: number
   slug: string
@@ -24,6 +156,7 @@ export default function Products() {
         </button>
       </div>
       <ProductsManager />
+      <SubscriptionModal />
     </div>
   )
 }

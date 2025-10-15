@@ -1,6 +1,21 @@
 import React, { useState } from 'react'
 import { DollarSign, CreditCard, Gift, TrendingUp, Clock, CheckCircle, ArrowRight, Star, Calendar, Wallet, XCircle } from 'lucide-react'
 
+// Coins calculation utility
+const COINS_CONVERSION_RATE = 10 // 10 coins = ₹1
+
+const rupeesToCoins = (rupees: number): number => {
+  return Math.floor(rupees * COINS_CONVERSION_RATE)
+}
+
+const coinsToRupees = (coins: number): number => {
+  return coins / COINS_CONVERSION_RATE
+}
+
+const formatCoins = (coins: number): string => {
+  return `${coins} coins`
+}
+
 interface CashbackOffer {
   id: string
   title: string
@@ -35,10 +50,10 @@ interface CashbackWallet {
 
 export default function CashbackSystem() {
   const [cashbackWallet] = useState<CashbackWallet>({
-    totalEarned: 2500,
-    availableBalance: 1800,
-    pendingAmount: 700,
-    usedAmount: 700,
+    totalEarned: rupeesToCoins(2500), // ₹2500 = 25,000 coins
+    availableBalance: rupeesToCoins(1800), // ₹1800 = 18,000 coins
+    pendingAmount: rupeesToCoins(700), // ₹700 = 7,000 coins
+    usedAmount: rupeesToCoins(700), // ₹700 = 7,000 coins
     nextPayoutDate: '2024-02-15',
     payoutMethod: 'Bank Transfer'
   })
@@ -180,20 +195,20 @@ export default function CashbackSystem() {
       {/* Header */}
       <div className="text-center">
         <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-          Nefol Cashback Program
+          Nefol Coins Program
         </h1>
         <p className="text-slate-600 dark:text-slate-400">
-          Earn cashback on every purchase and redeem it for future orders
+          Earn coins on every purchase and redeem them for future orders
         </p>
       </div>
 
-      {/* Cashback Wallet Overview */}
+      {/* Points Wallet Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg p-6 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold">Available Balance</h3>
-              <p className="text-3xl font-bold">₹{cashbackWallet.availableBalance}</p>
+              <h3 className="text-lg font-semibold">Available Coins</h3>
+              <p className="text-3xl font-bold">{formatCoins(cashbackWallet.availableBalance)}</p>
             </div>
             <Wallet className="h-8 w-8" />
           </div>
@@ -203,7 +218,7 @@ export default function CashbackSystem() {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-semibold">Total Earned</h3>
-              <p className="text-3xl font-bold">₹{cashbackWallet.totalEarned}</p>
+              <p className="text-3xl font-bold">{formatCoins(cashbackWallet.totalEarned)}</p>
             </div>
             <TrendingUp className="h-8 w-8" />
           </div>
@@ -213,7 +228,7 @@ export default function CashbackSystem() {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-semibold">Pending</h3>
-              <p className="text-3xl font-bold">₹{cashbackWallet.pendingAmount}</p>
+              <p className="text-3xl font-bold">{formatCoins(cashbackWallet.pendingAmount)}</p>
             </div>
             <Clock className="h-8 w-8" />
           </div>
@@ -223,18 +238,18 @@ export default function CashbackSystem() {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-semibold">Used</h3>
-              <p className="text-3xl font-bold">₹{cashbackWallet.usedAmount}</p>
+              <p className="text-3xl font-bold">{formatCoins(cashbackWallet.usedAmount)}</p>
             </div>
             <CreditCard className="h-8 w-8" />
           </div>
         </div>
       </div>
 
-      {/* Redeem Cashback */}
+      {/* Redeem Points */}
       <div className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-lg">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
-            Redeem Cashback
+            Redeem Points
           </h2>
           <button
             onClick={() => setShowRedeemModal(true)}

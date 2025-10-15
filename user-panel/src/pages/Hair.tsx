@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { getApiBase } from '../utils/apiBase'
 import { Heart, Star, ShoppingCart } from 'lucide-react'
+import { useCart } from '../contexts/CartContext'
 
 interface Product {
   id?: number
@@ -14,7 +15,9 @@ interface Product {
 }
 
 export default function Hair() {
+  const { addItem } = useCart()
   const [products, setProducts] = useState<Product[]>([])
+  const [csvProducts, setCsvProducts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -27,17 +30,10 @@ export default function Hair() {
       const response = await fetch(`${apiBase}/api/products`)
       if (response.ok) {
         const data = await response.json()
-        // Filter products for hair category
-        const hairProducts = data.filter((product: Product) => {
+        // Filter products for hair category - ONLY show products tagged as Hair Care
+        const hairProducts = data.filter((product: any) => {
           const category = (product.category || '').toLowerCase()
-          return category.includes('hair') || 
-                 category.includes('shampoo') ||
-                 category.includes('conditioner') ||
-                 category.includes('oil') ||
-                 category.includes('serum') ||
-                 category.includes('mask') ||
-                 category.includes('tonic') ||
-                 category.includes('lather')
+          return category === 'hair care' || category === 'haircare'
         })
         setProducts(hairProducts)
       }
@@ -48,8 +44,20 @@ export default function Hair() {
     }
   }
 
+  // Helper function to create simplified product data from CSV for listings
+  const getSimplifiedProductData = (csvProduct: any) => {
+    return {
+      slug: csvProduct['Product Name']?.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || '',
+      title: csvProduct['Product Name'] || '',
+      brand: csvProduct['Brand Name'] || 'NEFOL',
+      mrp: csvProduct['MRP '] || csvProduct['MRP'] || '',
+      websitePrice: csvProduct['website price'] || '',
+      category: 'Hair Care'
+    }
+  }
+
   return (
-    <main className="py-10 min-h-screen" style={{ backgroundColor: '#F4F9F9' }}>
+    <main className="py-10 min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F9F9' }}>
       <div className="mx-auto max-w-6xl px-4">
         {/* Header */}
         <div className="text-center mb-16">
@@ -88,39 +96,66 @@ export default function Hair() {
               </div>
             </div>
           ) : (
-            products.map((product) => (
-              <div key={product.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow group">
-                <div className="relative">
-                  <img 
-                    src={product.list_image || "/IMAGES/HAIR SHAMPOO (1).jpg"} 
-                    alt={product.title}
-                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute top-4 right-4">
-                    <button className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg">
-                      <Heart className="w-4 h-4" style={{ color: '#1B4965' }} />x
-                    </button>
+            products.map((product, index) => {
+              return (
+                <div key={product.slug} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow group cursor-pointer" onClick={() => window.location.hash = `#/product/${product.slug}`}>
+                  <div className="relative">
+                    <img 
+                      src={product.list_image || '/IMAGES/placeholder.jpg'} 
+                      alt={product.title}
+                      className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute top-4 right-4">
+                      <button className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg" onClick={(e) => e.stopPropagation()}>
+                        <Heart className="w-4 h-4" style={{ color: '#1B4965' }} />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-lg font-bold mb-2" style={{ color: '#1B4965' }}>
+                      {product.title}
+                    </h3>
+                    <p className="text-sm mb-4" style={{ color: '#9DB4C0' }}>
+                      {product.category || 'Premium hair care product'}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex flex-col">
+                        <span className="text-2xl font-bold" style={{ color: '#1B4965' }}>
+                          ₹{product.price}
+                        </span>
+                      </div>
+                      <button 
+                        className="text-white px-4 py-2 rounded-lg transition-colors flex items-center" 
+                        style={{ backgroundColor: '#4B97C9' }} 
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          addItem({
+                            slug: product.slug,
+                            title: product.title,
+                            price: product.price,
+                            listImage: product.list_image,
+                            category: product.category,
+                            description: product.description
+                          })
+                          // Show success feedback
+                          const button = e.currentTarget
+                          const originalText = button.textContent
+                          button.textContent = 'Added!'
+                          button.style.backgroundColor = '#10B981'
+                          setTimeout(() => {
+                            button.textContent = originalText
+                            button.style.backgroundColor = '#4B97C9'
+                          }, 1500)
+                        }}
+                      >
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        Add to Cart
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <div className="p-6">
-                  <h3 className="text-lg font-bold mb-2" style={{ color: '#1B4965' }}>
-                    {product.title}
-                  </h3>
-                  <p className="text-sm mb-4" style={{ color: '#9DB4C0' }}>
-                    {product.description || 'Premium hair care product'}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold" style={{ color: '#1B4965' }}>
-                      {product.price || '₹599'}
-                    </span>
-                    <button className="text-white px-4 py-2 rounded-lg transition-colors flex items-center" style={{ backgroundColor: '#4B97C9' }}>
-                      <ShoppingCart className="w-4 h-4 mr-2" />
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))
+              )
+            })
           )}
         </div>
 

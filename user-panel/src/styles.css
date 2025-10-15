@@ -68,18 +68,6 @@
   --font-size-9xl: 8rem;
 }
 
-/* Dark Mode Variables */
-[data-theme="dark"] {
-  --glass-bg: rgba(0, 0, 0, 0.2);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-  
-  --neu-light: #2d3748;
-  --neu-dark: #1a202c;
-  --neu-shadow-light: 20px 20px 60px #1a202c;
-  --neu-shadow-dark: -20px -20px 60px #2d3748;
-}
-
 /* ===== REVOLUTIONARY BASE STYLES ===== */
 @layer base {
   * {

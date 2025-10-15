@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { getApiBase } from '../utils/apiBase'
 import { Heart, Star, ShoppingCart, Package } from 'lucide-react'
+import { useCart } from '../contexts/CartContext'
 
 interface Product {
   id?: number
@@ -14,6 +15,7 @@ interface Product {
 }
 
 export default function Combos() {
+  const { addItem } = useCart()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -27,15 +29,10 @@ export default function Combos() {
       const response = await fetch(`${apiBase}/api/products`)
       if (response.ok) {
         const data = await response.json()
-        // Filter products for combo category
+        // Filter products for combo category - ONLY show products tagged as Combo
         const comboProducts = data.filter((product: Product) => {
           const category = (product.category || '').toLowerCase()
-          return category.includes('combo') || 
-                 category.includes('pack') ||
-                 category.includes('bundle') ||
-                 category.includes('set') ||
-                 category.includes('kit') ||
-                 category.includes('duo')
+          return category === 'combo' || category === 'combo pack' || category === 'combo pack'
         })
         setProducts(comboProducts)
       }
@@ -47,7 +44,7 @@ export default function Combos() {
   }
 
   return (
-    <main className="py-10 min-h-screen" style={{ backgroundColor: '#F4F9F9' }}>
+    <main className="py-10 min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F9F9' }}>
       <div className="mx-auto max-w-6xl px-4">
         {/* Header */}
         <div className="text-center mb-16">
@@ -87,10 +84,10 @@ export default function Combos() {
             </div>
           ) : (
             products.map((product) => (
-              <div key={product.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow group">
+              <div key={product.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow group cursor-pointer" onClick={() => window.location.hash = `#/product/${product.slug}`}>
                 <div className="relative">
                   <img 
-                    src={product.list_image || "/IMAGES/1._Deep_Clean_Combo_165x.png"} 
+                    src={product.list_image || '/IMAGES/placeholder.jpg'} 
                     alt={product.title}
                     className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                   />
@@ -100,7 +97,7 @@ export default function Combos() {
                     </span>
                   </div>
                   <div className="absolute top-4 right-4">
-                    <button className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg">
+                    <button className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg" onClick={(e) => e.stopPropagation()}>
                       <Heart className="w-4 h-4" style={{ color: '#1B4965' }} />
                     </button>
                   </div>
@@ -125,7 +122,30 @@ export default function Combos() {
                     </div>
                   </div>
 
-                  <button className="w-full text-white py-3 rounded-lg transition-colors flex items-center justify-center" style={{ backgroundColor: '#4B97C9' }}>
+                  <button 
+                    className="w-full text-white py-3 rounded-lg transition-colors flex items-center justify-center" 
+                    style={{ backgroundColor: '#4B97C9' }} 
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      addItem({
+                        slug: product.slug,
+                        title: product.title,
+                        price: product.price || '₹1,299',
+                        listImage: product.list_image,
+                        category: product.category,
+                        description: product.description || 'Premium combo pack with multiple products'
+                      })
+                      // Show success feedback
+                      const button = e.currentTarget
+                      const originalText = button.textContent
+                      button.textContent = 'Added!'
+                      button.style.backgroundColor = '#10B981'
+                      setTimeout(() => {
+                        button.textContent = originalText
+                        button.style.backgroundColor = '#4B97C9'
+                      }, 1500)
+                    }}
+                  >
                     <ShoppingCart className="w-4 h-4 mr-2" />
                     Add to Cart
                   </button>

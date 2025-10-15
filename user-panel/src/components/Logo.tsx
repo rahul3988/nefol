@@ -1,5 +1,4 @@
 import React from 'react'
-import { useTheme } from '../contexts/ThemeContext'
 
 interface LogoProps {
   className?: string
@@ -7,16 +6,10 @@ interface LogoProps {
 }
 
 export default function Logo({ className = "font-semibold text-xl hover:text-blue-600 transition-colors", href = "#/" }: LogoProps) {
-  const { theme } = useTheme()
-  
-  const logoSrc = theme === 'light' 
-    ? '/IMAGES/light theme logo.png' 
-    : '/IMAGES/dark theme logo.png'
-
   return (
     <a href={href} className={className}>
       <img 
-        src={logoSrc} 
+        src="/IMAGES/light theme logo.png" 
         alt="Nefol" 
         className="h-12 w-auto"
         onError={(e) => {

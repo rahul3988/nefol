@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { User, CreditCard, MapPin, Phone, Mail, Package, Heart, Settings, LogOut } from 'lucide-react'
+import { formatCoins, formatCoinsWithValue, calculatePurchaseCoins } from '../utils/points'
+import ProfileAvatar from '../components/ProfileAvatar'
+import { useAuth } from '../contexts/AuthContext'
 
 interface UserProfile {
   name: string
@@ -14,6 +17,7 @@ interface UserProfile {
   loyalty_points: number
   total_orders: number
   member_since: string
+  profile_photo?: string
 }
 
 interface Order {
@@ -38,6 +42,7 @@ interface SavedCard {
 }
 
 export default function Profile() {
+  const { refreshUser } = useAuth()
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [orders, setOrders] = useState<Order[]>([])
   const [savedCards, setSavedCards] = useState<SavedCard[]>([])
@@ -71,6 +76,9 @@ export default function Profile() {
       zip: ''
     }
   })
+  const [uploadingPhoto, setUploadingPhoto] = useState(false)
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null)
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     fetchProfile()
@@ -235,6 +243,79 @@ export default function Profile() {
     window.location.hash = '#/login'
   }
 
+  const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file')
+      return
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size should be less than 5MB')
+      return
+    }
+
+    setUploadingPhoto(true)
+    
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/upload`, {
+        method: 'POST',
+        body: formData
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        const photoUrl = `${window.location.protocol}//${window.location.hostname}:4000${result.url}`
+        
+        // Update profile with new photo URL
+        const token = localStorage.getItem('token')
+        if (!token) {
+          window.location.hash = '#/login'
+          return
+        }
+
+        const updateResponse = await fetch(`${window.location.protocol}//${window.location.hostname}:4000/api/users/profile`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name: profile?.name,
+            phone: profile?.phone,
+            address: profile?.address,
+            profile_photo: photoUrl
+          })
+        })
+
+        if (updateResponse.ok) {
+          const updatedProfile = await updateResponse.json()
+          setProfile(updatedProfile)
+          setPhotoPreview(photoUrl)
+          // Refresh user data in AuthContext
+          await refreshUser()
+          alert('Profile photo updated successfully!')
+        } else {
+          alert('Failed to update profile photo')
+        }
+      } else {
+        alert('Failed to upload photo')
+      }
+    } catch (error) {
+      console.error('Failed to upload photo:', error)
+      alert('Failed to upload photo')
+    } finally {
+      setUploadingPhoto(false)
+    }
+  }
+
   const handleAddCard = async () => {
     try {
       const token = localStorage.getItem('token')
@@ -343,7 +424,7 @@ export default function Profile() {
 
   const tabs = [
     { id: 'overview', label: 'Your Profile', icon: User },
-    { id: 'cash', label: 'Nefol Cash', icon: CreditCard },
+    { id: 'cash', label: 'Nefol Coins', icon: CreditCard },
     { id: 'orders', label: 'Your Orders', icon: Package },
     { id: 'cards', label: 'Saved Cards', icon: CreditCard },
     { id: 'address', label: 'Manage Address', icon: MapPin },
@@ -364,8 +445,35 @@ export default function Profile() {
           <div className="lg:col-span-1">
             <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-6">
               <div className="text-center mb-6">
-                <div className="mx-auto mb-4 h-20 w-20 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center text-2xl">
-                  👤
+                <div className="relative mx-auto mb-4">
+                  <ProfileAvatar 
+                    profilePhoto={profile.profile_photo}
+                    name={profile.name}
+                    size="xl"
+                    className="mx-auto"
+                    clickable={true}
+                    onClick={() => fileInputRef.current?.click()}
+                  />
+                  {/* Photo Upload Button */}
+                  <div className="mt-3">
+                    <label className="cursor-pointer">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handlePhotoUpload}
+                        className="hidden"
+                        disabled={uploadingPhoto}
+                      />
+                      <button
+                        type="button"
+                        disabled={uploadingPhoto}
+                        className="px-3 py-1 text-xs bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {uploadingPhoto ? 'Uploading...' : 'Change Photo'}
+                      </button>
+                    </label>
+                  </div>
                 </div>
                 <h3 className="text-lg font-semibold dark:text-slate-100">{profile.name}</h3>
                 <p className="text-slate-600 dark:text-slate-400">{profile.email}</p>
@@ -378,11 +486,23 @@ export default function Profile() {
                   return (
                     <button
                       key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                      onClick={() => {
+                        setActiveTab(tab.id)
+                        // Smooth scroll to content area
+                        setTimeout(() => {
+                          const contentElement = document.getElementById('profile-content')
+                          if (contentElement) {
+                            contentElement.scrollIntoView({ 
+                              behavior: 'smooth', 
+                              block: 'start' 
+                            })
+                          }
+                        }, 100)
+                      }}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 ${
                         activeTab === tab.id
-                          ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'
-                          : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
+                          ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 shadow-sm'
+                          : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 hover:shadow-sm'
                       }`}
                     >
                       <IconComponent className="h-5 w-5" />
@@ -403,7 +523,7 @@ export default function Profile() {
           </div>
 
           {/* Main Content */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3" id="profile-content">
             <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-6">
               {/* Overview Tab */}
               {activeTab === 'overview' && (
@@ -556,22 +676,22 @@ export default function Profile() {
                 </div>
               )}
 
-              {/* Nefol Cash Tab */}
+              {/* Nefol Coins Tab */}
               {activeTab === 'cash' && (
                 <div>
-                  <h2 className="text-2xl font-semibold dark:text-slate-100 mb-6">Nefol Cash</h2>
+                  <h2 className="text-2xl font-semibold dark:text-slate-100 mb-6">Nefol Coins</h2>
                   <div className="text-center py-12">
                     <div className="mx-auto mb-6 h-24 w-24 rounded-full bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
                       <CreditCard className="h-12 w-12 text-green-600" />
                     </div>
-                    <h3 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">₹ 0</h3>
-                    <p className="text-slate-600 dark:text-slate-400 mb-6">Your Nefol Cash Balance</p>
+                    <h3 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">{formatCoins(0)}</h3>
+                    <p className="text-slate-600 dark:text-slate-400 mb-6">Your Nefol Coins Balance</p>
                     <div className="space-y-4 max-w-md mx-auto">
                       <button className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                        Add Money
+                        Earn Coins
                       </button>
                       <button className="w-full px-6 py-3 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                        Transaction History
+                        Coins History
                       </button>
                     </div>
                   </div>

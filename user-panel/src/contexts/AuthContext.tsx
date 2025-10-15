@@ -12,6 +12,7 @@ interface User {
     state: string
     zip: string
   }
+  profile_photo?: string
   loyalty_points: number
   total_orders: number
   member_since: string
@@ -27,6 +28,7 @@ interface AuthContextValue {
   signup: (userData: SignupData) => Promise<boolean>
   logout: () => void
   updateProfile: (data: Partial<User>) => Promise<boolean>
+  refreshUser: () => Promise<void>
 }
 
 interface SignupData {
@@ -179,6 +181,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const refreshUser = async (): Promise<void> => {
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) return
+
+      const apiBase = getApiBase()
+      const response = await fetch(`${apiBase}/api/users/profile`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+
+      if (response.ok) {
+        const userData = await response.json()
+        setUser(userData)
+        localStorage.setItem('user', JSON.stringify(userData))
+      }
+    } catch (error) {
+      console.error('Failed to refresh user data:', error)
+    }
+  }
+
   const contextValue: AuthContextValue = {
     user,
     isAuthenticated,
@@ -187,7 +212,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     login,
     signup,
     logout,
-    updateProfile
+    updateProfile,
+    refreshUser
   }
 
   return (

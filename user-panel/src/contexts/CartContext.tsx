@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useMemo, useState, useEffect } from 'react'
 import type { Product } from '../types'
+import { calculatePurchaseCoins } from '../utils/points'
 
 export type CartItem = {
   slug: string
@@ -7,6 +8,7 @@ export type CartItem = {
   price: string
   image?: string
   quantity: number
+  category?: string
 }
 
 type CartContextValue = {
@@ -16,6 +18,9 @@ type CartContextValue = {
   updateQuantity: (index: number, quantity: number) => void
   clear: () => void
   subtotal: number
+  tax: number
+  total: number
+  coinsEarned: number
 }
 
 const CartContext = createContext<CartContextValue | undefined>(undefined)
@@ -58,7 +63,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         next[idx] = { ...next[idx], quantity: next[idx].quantity + quantity }
         return next
       }
-      return [...prev, { slug: p.slug, title: p.title, price: p.price, image: p.listImage, quantity }]
+      return [...prev, { slug: p.slug, title: p.title, price: p.price, image: p.listImage, quantity, category: p.category }]
     })
   }
 
@@ -85,8 +90,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }
 
   const subtotal = useMemo(() => items.reduce((sum, i) => sum + parsePrice(i.price) * i.quantity, 0), [items])
+  
+  // Category-specific tax calculation
+  const tax = useMemo(() => {
+    return items.reduce((totalTax, item) => {
+      const itemSubtotal = parsePrice(item.price) * item.quantity
+      const category = (item.category || '').toLowerCase()
+      
+      // 5% tax for hair products, 18% for others
+      const taxRate = category.includes('hair') ? 0.05 : 0.18
+      return totalTax + (itemSubtotal * taxRate)
+    }, 0)
+  }, [items])
+  
+  const total = useMemo(() => subtotal + tax, [subtotal, tax])
+  
+  const coinsEarned = useMemo(() => calculatePurchaseCoins(total), [total])
 
-  const value = useMemo(() => ({ items, addItem, removeIndex, updateQuantity, clear, subtotal }), [items, subtotal])
+  const value = useMemo(() => ({ items, addItem, removeIndex, updateQuantity, clear, subtotal, tax, total, coinsEarned }), [items, subtotal, tax, total, coinsEarned])
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 }
 

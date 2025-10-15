@@ -7,6 +7,7 @@ export type Product = {
   listImage: string
   pdpImages: string[]
   description: string
+  details?: any
   created_at?: string
 }
 

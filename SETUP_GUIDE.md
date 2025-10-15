@@ -20,7 +20,7 @@ A comprehensive e-commerce platform for Nefol beauty brand with advanced custome
 ### Customer Engagement Features
 - **⭐ Loyalty Program** - Points-based rewards system
 - **🤝 Affiliate Program** - Commission-based referral system
-- **💰 Cashback System** - Cashback rewards on purchases
+- **💰 Points System** - Points rewards on purchases
 - **📧 Email Marketing** - Automated email campaigns
 - **📱 SMS Marketing** - SMS campaign management
 - **🔔 Push Notifications** - Web push notifications

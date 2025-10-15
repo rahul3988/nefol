@@ -70,6 +70,9 @@ async function ensureSchema() {
     -- Ensure details column exists (for existing tables)
     alter table products add column if not exists details jsonb default '{}'::jsonb;
     
+    -- Ensure profile_photo column exists (for existing users table)
+    alter table users add column if not exists profile_photo text;
+    
     create table if not exists users (
       id serial primary key,
       name text not null,
@@ -77,6 +80,7 @@ async function ensureSchema() {
       password text not null,
       phone text,
       address jsonb,
+      profile_photo text,
       loyalty_points integer default 0,
       total_orders integer default 0,
       member_since timestamptz default now(),
@@ -1713,7 +1717,7 @@ app.get('/api/users/profile', async (req, res) => {
     
     const userId = tokenParts[2]
     const result = await db.query(`
-      SELECT id, name, email, phone, address, loyalty_points, total_orders, member_since, is_verified
+      SELECT id, name, email, phone, address, profile_photo, loyalty_points, total_orders, member_since, is_verified
       FROM users WHERE id = $1
     `, [userId])
 
@@ -1727,6 +1731,7 @@ app.get('/api/users/profile', async (req, res) => {
       email: user.email,
       phone: user.phone,
       address: user.address,
+      profile_photo: user.profile_photo,
       loyalty_points: user.loyalty_points,
       total_orders: user.total_orders,
       member_since: user.member_since
@@ -1752,14 +1757,14 @@ app.put('/api/users/profile', async (req, res) => {
     }
     
     const userId = tokenParts[2]
-    const { name, phone, address } = req.body
+    const { name, phone, address, profile_photo } = req.body
 
     const result = await db.query(`
       UPDATE users 
-      SET name = $1, phone = $2, address = $3, updated_at = NOW()
-      WHERE id = $4
-      RETURNING id, name, email, phone, address, loyalty_points, total_orders, member_since, is_verified
-    `, [name, phone, JSON.stringify(address), userId])
+      SET name = $1, phone = $2, address = $3, profile_photo = $4, updated_at = NOW()
+      WHERE id = $5
+      RETURNING id, name, email, phone, address, profile_photo, loyalty_points, total_orders, member_since, is_verified
+    `, [name, phone, JSON.stringify(address), profile_photo || null, userId])
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'User not found' })
@@ -1774,6 +1779,7 @@ app.put('/api/users/profile', async (req, res) => {
       email: user.email,
       phone: user.phone,
       address: user.address,
+      profile_photo: user.profile_photo,
       loyalty_points: user.loyalty_points,
       total_orders: user.total_orders,
       updated_at: new Date()
@@ -1784,6 +1790,7 @@ app.put('/api/users/profile', async (req, res) => {
       email: user.email,
       phone: user.phone,
       address: user.address,
+      profile_photo: user.profile_photo,
       loyalty_points: user.loyalty_points,
       total_orders: user.total_orders,
       member_since: user.member_since

@@ -32,7 +32,8 @@ export function useProducts() {
             price: r.price,
             listImage,
             pdpImages,
-            description: r.description || ''
+            description: r.description || '',
+            details: r.details || {}
           }
         }).filter((p: Product) => p.slug && p.title)
         if (!cancelled) setItems(mapped)
